@@ -1,0 +1,22 @@
+# Site
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# Exclude from GitHub Pages
+node_modules/
+Gemfile
+Gemfile.lock
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ site.title }}</title>
+  <meta name="description" content="{{ site.description }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ '/css/main.css' | relative_url }}">
+</head>
+<body>
+  <canvas id="canvas-bg"></canvas>
+  <div class="content-wrapper">
+    <nav>
+      <div class="nav-container">
+        <div class="logo">CyberSpace</div>
+        <ul class="nav-links">
+          {% for item in site.navigation %}
+          <li><a href="{{ item.link }}" data-page="{% if item.name == '首页' %}home{% else %}{{ item.name | downcase }}{% endif %}" {% if forloop.first %}class="active"{% endif %}>{{ item.name }}</a></li>
+          {% endfor %}
+        </ul>
+        <div class="menu-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </nav>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <div id="home" class="page active">
+      <div class="container">
+        <div class="hero">
+          <div class="hero-content">
+            <h1 class="hero-title">
+              你好，我是 <span class="gradient-text">Zentrix</span>
+            </h1>
+            <p class="hero-subtitle">
+              欢迎来到我的<span class="gradient-text">赛博空间</span>，探索代码与创意的世界
+            </p>
+            <div class="hero-buttons">
+              <a href="#about" data-page="about" class="btn btn-primary">查看关于我</a>
+              <a href="#projects" data-page="projects" class="btn btn-outline">浏览项目</a>
+            </div>
+            <div class="hero-stats">
+              <div class="stat">
+                <div class="stat-number">5</div>
+                <div class="stat-label">项目经验</div>
+              </div>
+              <div class="stat">
+                <div class="stat-number">100</div>
+                <div class="stat-label">代码提交</div>
+              </div>
+              <div class="stat">
+                <div class="stat-number">2</div>
+                <div class="stat-label">开源项目</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer>
+        <p>© {{ site.time | date: '%Y' }} Zentrix. Built with ❤️ on GitHub Pages.</p>
+      </footer>
+    </div>
+
+    <div id="about" class="page">
+      <div class="container">
+        <h2 class="section-title">关于 <span>我</span></h2>
+        <div class="about-grid">
+          <div class="about-card">
+            <div class="about-card-icon">👨‍💻</div>
+            <h3>关于我</h3>
+            <p>
+              我是一名对编程充满热情的开发者，正在探索现代 Web 开发的世界。热爱开源，喜欢折腾新技术，不断学习和成长中。
+            </p>
+          </div>
+          <div class="about-card">
+            <div class="about-card-icon">🚀</div>
+            <h3>兴趣方向</h3>
+            <p>
+              对前端开发、用户体验设计充满兴趣，同时也在探索全栈开发。喜欢创造美观、实用且高性能的数字产品。
+            </p>
+          </div>
+          <div class="about-card">
+            <div class="about-card-icon">🎨</div>
+            <h3>设计理念</h3>
+            <p>
+              相信简洁就是美，追求优雅的代码和用户体验。每一行代码都应该有它存在的意义。
+            </p>
+          </div>
+        </div>
+        <div class="skills">
+          <h3 style="text-align: center; margin: 3rem 0 2rem; font-size: 2rem;">技能掌握</h3>
+          <div class="skill-item">
+            <div class="skill-info">
+              <span class="skill-name">HTML/CSS</span>
+              <span class="skill-percent">90%</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-progress" style="width: 90%; animation-play-state: paused;"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-info">
+              <span class="skill-name">JavaScript</span>
+              <span class="skill-percent">85%</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-progress" style="width: 85%; animation-play-state: paused;"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-info">
+              <span class="skill-name">React/Vue</span>
+              <span class="skill-percent">75%</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-progress" style="width: 75%; animation-play-state: paused;"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-info">
+              <span class="skill-name">Node.js</span>
+              <span class="skill-percent">70%</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-progress" style="width: 70%; animation-play-state: paused;"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-info">
+              <span class="skill-name">Git/GitHub</span>
+              <span class="skill-percent">80%</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-progress" style="width: 80%; animation-play-state: paused;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer>
+        <p>© {{ site.time | date: '%Y' }} Zentrix. Built with ❤️ on GitHub Pages.</p>
+      </footer>
+    </div>
+
+    <div id="projects" class="page">
+      <div class="container">
+        <h2 class="section-title">我的 <span>项目</span></h2>
+        <div class="projects-grid">
+          <div class="project-card">
+            <div class="project-image">🚀</div>
+            <div class="project-content">
+              <h3 class="project-title">个人主页</h3>
+              <p class="project-description">基于 GitHub Pages 构建的现代化个人主页，包含动态粒子效果和流畅的页面切换动画。</p>
+              <div class="project-tags">
+                <span class="tag">HTML5</span>
+                <span class="tag">CSS3</span>
+                <span class="tag">JavaScript</span>
+                <span class="tag">Jekyll</span>
+              </div>
+              <div class="project-links">
+                <a href="#" class="project-link">查看代码 →</a>
+                <a href="#" class="project-link">在线演示 →</a>
+              </div>
+            </div>
+          </div>
+          <div class="project-card">
+            <div class="project-image">💻</div>
+            <div class="project-content">
+              <h3 class="project-title">待办应用</h3>
+              <p class="project-description">一个美观现代化的待办事项管理应用，支持拖拽排序、本地存储和深色主题。</p>
+              <div class="project-tags">
+                <span class="tag">React</span>
+                <span class="tag">Tailwind</span>
+                <span class="tag">TypeScript</span>
+              </div>
+              <div class="project-links">
+                <a href="#" class="project-link">查看代码 →</a>
+                <a href="#" class="project-link">在线演示 →</a>
+              </div>
+            </div>
+          </div>
+          <div class="project-card">
+            <div class="project-image">🎨</div>
+            <div class="project-content">
+              <h3 class="project-title">画板工具</h3>
+              <p class="project-description">基于 Canvas 的在线绘图工具，支持多种画笔样式、颜色选择和导出功能。</p>
+              <div class="project-tags">
+                <span class="tag">Canvas</span>
+                <span class="tag">JavaScript</span>
+                <span class="tag">CSS</span>
+              </div>
+              <div class="project-links">
+                <a href="#" class="project-link">查看代码 →</a>
+                <a href="#" class="project-link">在线演示 →</a>
+              </div>
+            </div>
+          </div>
+          <div class="project-card">
+            <div class="project-image">🌐</div>
+            <div class="project-content">
+              <h3 class="project-title">天气应用</h3>
+              <p class="project-description">美观的天气预报应用，支持地理位置查询、七日预报和空气质量展示。</p>
+              <div class="project-tags">
+                <span class="tag">Vue.js</span>
+                <span class="tag">API</span>
+                <span class="tag">Axios</span>
+              </div>
+              <div class="project-links">
+                <a href="#" class="project-link">查看代码 →</a>
+                <a href="#" class="project-link">在线演示 →</a>
+              </div>
+            </div>
+          </div>
+          <div class="project-card">
+            <div class="project-image">📷</div>
+            <div class="project-content">
+              <h3 class="project-title">图片画廊</h3>
+              <p class="project-description">响应式图片画廊展示，支持瀑布流布局、懒加载和灯箱预览功能。</p>
+              <div class="project-tags">
+                <span class="tag">CSS Grid</span>
+                <span class="tag">JavaScript</span>
+                <span class="tag">Responsive</span>
+              </div>
+              <div class="project-links">
+                <a href="#" class="project-link">查看代码 →</a>
+                <a href="#" class="project-link">在线演示 →</a>
+              </div>
+            </div>
+          </div>
+          <div class="project-card">
+            <div class="project-image">🔧</div>
+            <div class="project-content">
+              <h3 class="project-title">添加更多项目</h3>
+              <p class="project-description">你可以继续在这里添加更多有趣的项目，展示你的作品和能力。</p>
+              <div class="project-tags">
+                <span class="tag">Coming Soon</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/zentrix566" class="project-link">查看 GitHub →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer>
+        <p>© {{ site.time | date: '%Y' }} Zentrix. Built with ❤️ on GitHub Pages.</p>
+      </footer>
+    </div>
+
+    <div id="contact" class="page">
+      <div class="container">
+        <h2 class="section-title">联系 <span>我</span></h2>
+        <div class="contact-container">
+          <div class="contact-info">
+            <div class="contact-item">
+              <div class="contact-icon">📧</div>
+              <div class="contact-label">邮箱</div>
+              <div class="contact-value">
+                <a href="mailto:zentrix566@gmail.com">zentrix566@gmail.com</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">🐙</div>
+              <div class="contact-label">GitHub</div>
+              <div class="contact-value">
+                <a href="https://github.com/zentrix566" target="_blank">@zentrix566</a>
+              </div>
+            </div>
+          </div>
+          <div style="text-align: center; margin-top: 2rem;">
+            <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.8;">
+              欢迎通过以下方式联系我，一起探讨技术、交流想法，或者合作开发有趣的项目！
+            </p>
+          </div>
+          <div class="social-links">
+            <a href="https://github.com/zentrix566" target="_blank" class="social-link" title="GitHub">
+              <span>🐙</span>
+            </a>
+            <a href="mailto:zentrix566@gmail.com" class="social-link" title="Email">
+              <span>📧</span>
+            </a>
+            <a href="#" class="social-link" title="LinkedIn">
+              <span>💼</span>
+            </a>
+            <a href="#" class="social-link" title="Blog">
+              <span>📝</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <footer>
+        <p>© {{ site.time | date: '%Y' }} Zentrix. Built with ❤️ on GitHub Pages.</p>
+      </footer>
+    </div>
+  </div>
+
+  <script src="{{ '/js/main.js' | relative_url }}"></script>
+</body>
+</html>

@@ -1,3 +1,37 @@
-title: 我的个人主页
-description: 欢迎来到我的赛博空间
-theme: jekyll-theme-cayman
+title: 赛博空间 | Cyber Space
+description: 欢迎来到我的赛博空间 🚀
+baseurl: ""
+url: "https://zentrix566.github.io"
+
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-feed
+
+# Custom settings
+navigation:
+  - name: 首页
+    link: /
+  - name: 关于
+    link: /about
+  - name: 项目
+    link: /projects
+  - name: 联系
+    link: /contact
+
+# Colors
+colors:
+  primary: '#6366f1'
+  secondary: '#8b5cf6'
+  accent: '#ec4899'
+  background: '#0f172a'
+  surface: '#1e293b'
+  text: '#f1f5f9'
+
+# Exclude files from processing
+exclude:
+  - node_modules
+  - .git
+  - .github
+  - Gemfile
+  - Gemfile.lock
