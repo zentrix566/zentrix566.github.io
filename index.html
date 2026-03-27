@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ site.title }}</title>
-  <meta name="description" content="{{ site.description }}">
+  <title>赛博空间 | Cyber Space</title>
+  <meta name="description" content="欢迎来到我的赛博空间 🚀">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ '/css/main.css' | relative_url }}">
+  <link rel="stylesheet" href="./css/main.css">
 </head>
 <body>
   <canvas id="canvas-bg"></canvas>
@@ -17,9 +17,10 @@
       <div class="nav-container">
         <div class="logo">CyberSpace</div>
         <ul class="nav-links">
-          {% for item in site.navigation %}
-          <li><a href="{{ item.link }}" data-page="{% if item.name == '首页' %}home{% else %}{{ item.name | downcase }}{% endif %}" {% if forloop.first %}class="active"{% endif %}>{{ item.name }}</a></li>
-          {% endfor %}
+          <li><a href="#" data-page="home" class="active">首页</a></li>
+          <li><a href="#about" data-page="about">关于</a></li>
+          <li><a href="#projects" data-page="projects">项目</a></li>
+          <li><a href="#contact" data-page="contact">联系</a></li>
         </ul>
         <div class="menu-toggle">
           <span></span>
@@ -64,7 +65,7 @@
         </div>
       </div>
       <footer>
-        <p>© {{ site.time | date: '%Y' }} Zentrix. Built with ❤️ on GitHub Pages.</p>
+        <p>© <span class="year">2026</span> Zentrix. Built with ❤️ on GitHub Pages.</p>
       </footer>
     </div>
 
@@ -144,7 +145,7 @@
         </div>
       </div>
       <footer>
-        <p>© {{ site.time | date: '%Y' }} Zentrix. Built with ❤️ on GitHub Pages.</p>
+        <p>© <span class="year">2026</span> Zentrix. Built with ❤️ on GitHub Pages.</p>
       </footer>
     </div>
 
@@ -249,7 +250,7 @@
         </div>
       </div>
       <footer>
-        <p>© {{ site.time | date: '%Y' }} Zentrix. Built with ❤️ on GitHub Pages.</p>
+        <p>© <span class="year">2026</span> Zentrix. Built with ❤️ on GitHub Pages.</p>
       </footer>
     </div>
 
@@ -295,11 +296,14 @@
         </div>
       </div>
       <footer>
-        <p>© {{ site.time | date: '%Y' }} Zentrix. Built with ❤️ on GitHub Pages.</p>
+        <p>© <span class="year">2026</span> Zentrix. Built with ❤️ on GitHub Pages.</p>
       </footer>
     </div>
   </div>
 
-  <script src="{{ '/js/main.js' | relative_url }}"></script>
+  <script src="./js/main.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
