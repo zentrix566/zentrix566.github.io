@@ -1,307 +1,151 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>赛博空间 | Cyber Space</title>
-  <meta name="description" content="欢迎来到我的赛博空间 🚀">
-  <link rel="stylesheet" href="./css/main.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zentrix的云原生实验室</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #2af598 0%, #009efd 100%);
+            --bg-gradient: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text-main: #2d3748;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh; /* 改为 min-height 防止内容多时撑破容器 */
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            width: 90%;
+            max-width: 500px; /* 限制最大宽度，保证每行两个看起来最舒服 */
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            color: var(--text-main);
+        }
+
+        /* --- 核心修改部分：自动换行布局 --- */
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;    /* 允许换行 */
+            gap: 15px;          /* 按钮之间的间距 */
+            justify-content: center;
+        }
+
+        .btn {
+            /* 关键：每个按钮占据 50% 减去 间距的一半 */
+            flex: 0 1 calc(50% - 8px); 
+            box-sizing: border-box;
+            padding: 15px 10px;
+            text-decoration: none;
+            color: white;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        /* ------------------------------ */
+
+        .btn-primary { background: var(--primary-gradient); }
+        .btn-secondary { background: var(--secondary-gradient); }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            filter: brightness(1.05);
+        }
+
+        /* 框外下方时钟 */
+        .clock-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        #clock {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            line-height: 1;
+        }
+
+        .date-info {
+            font-size: 1.1rem;
+            margin-top: 10px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body>
-  <canvas id="canvas-bg"></canvas>
-  <div class="content-wrapper">
-    <nav>
-      <div class="nav-container">
-        <div class="logo">CyberSpace</div>
-        <ul class="nav-links">
-          <li><a href="#" data-page="home" class="active">首页</a></li>
-          <li><a href="#about" data-page="about">关于</a></li>
-          <li><a href="#projects" data-page="projects">项目</a></li>
-          <li><a href="#contact" data-page="contact">联系</a></li>
-        </ul>
-        <div class="menu-toggle">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
-    </nav>
 
-    <div class="cursor-dot"></div>
-    <div class="cursor-outline"></div>
-
-    <div id="home" class="page active">
-      <div class="container">
-        <div class="hero">
-          <div class="hero-content">
-            <h1 class="hero-title">
-              你好，我是 <span class="gradient-text">Zentrix</span>
-            </h1>
-            <p class="hero-subtitle">
-              欢迎来到我的<span class="gradient-text">赛博空间</span>，探索代码与创意的世界
-            </p>
-            <div class="hero-buttons">
-              <a href="#about" data-page="about" class="btn btn-primary">查看关于我</a>
-              <a href="#projects" data-page="projects" class="btn btn-outline">浏览项目</a>
-            </div>
-            <div class="hero-stats">
-              <div class="stat">
-                <div class="stat-number">5</div>
-                <div class="stat-label">项目经验</div>
-              </div>
-              <div class="stat">
-                <div class="stat-number">100</div>
-                <div class="stat-label">代码提交</div>
-              </div>
-              <div class="stat">
-                <div class="stat-number">2</div>
-                <div class="stat-label">开源项目</div>
-              </div>
-            </div>
-          </div>
+    <div class="card">
+        <h1>Zentrix的云原生实验室</h1>
+        <div class="nav-links">
+            <a href="./web/yanshi.html" class="btn btn-primary">CI/CD 部署</a>
+            <a href="./web/ceshi.html" class="btn btn-secondary">系统状态检测</a>
+            <a href="./web/page3.html" class="btn btn-secondary">关于我</a>
+            <a href="./web/page4.html" class="btn btn-primary">技术项目</a>
+            <a href="./web/page5.html" class="btn btn-secondary">工具链</a>
+            <a href="./web/page6.html" class="btn btn-primary">架构演进</a>
         </div>
-      </div>
-      <footer>
-        <p>© <span class="year">2026</span> Zentrix. Built with ❤️ on GitHub Pages.</p>
-      </footer>
     </div>
 
-    <div id="about" class="page">
-      <div class="container">
-        <h2 class="section-title">关于 <span>我</span></h2>
-        <div class="about-grid">
-          <div class="about-card">
-            <div class="about-card-icon">👨‍💻</div>
-            <h3>关于我</h3>
-            <p>
-              我是一名对编程充满热情的开发者，正在探索现代 Web 开发的世界。热爱开源，喜欢折腾新技术，不断学习和成长中。
-            </p>
-          </div>
-          <div class="about-card">
-            <div class="about-card-icon">🚀</div>
-            <h3>兴趣方向</h3>
-            <p>
-              对前端开发、用户体验设计充满兴趣，同时也在探索全栈开发。喜欢创造美观、实用且高性能的数字产品。
-            </p>
-          </div>
-          <div class="about-card">
-            <div class="about-card-icon">🎨</div>
-            <h3>设计理念</h3>
-            <p>
-              相信简洁就是美，追求优雅的代码和用户体验。每一行代码都应该有它存在的意义。
-            </p>
-          </div>
-        </div>
-        <div class="skills">
-          <h3 style="text-align: center; margin: 3rem 0 2rem; font-size: 2rem;">技能掌握</h3>
-          <div class="skill-item">
-            <div class="skill-info">
-              <span class="skill-name">HTML/CSS</span>
-              <span class="skill-percent">90%</span>
-            </div>
-            <div class="skill-bar">
-              <div class="skill-progress" style="width: 90%; animation-play-state: paused;"></div>
-            </div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-info">
-              <span class="skill-name">JavaScript</span>
-              <span class="skill-percent">85%</span>
-            </div>
-            <div class="skill-bar">
-              <div class="skill-progress" style="width: 85%; animation-play-state: paused;"></div>
-            </div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-info">
-              <span class="skill-name">React/Vue</span>
-              <span class="skill-percent">75%</span>
-            </div>
-            <div class="skill-bar">
-              <div class="skill-progress" style="width: 75%; animation-play-state: paused;"></div>
-            </div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-info">
-              <span class="skill-name">Node.js</span>
-              <span class="skill-percent">70%</span>
-            </div>
-            <div class="skill-bar">
-              <div class="skill-progress" style="width: 70%; animation-play-state: paused;"></div>
-            </div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-info">
-              <span class="skill-name">Git/GitHub</span>
-              <span class="skill-percent">80%</span>
-            </div>
-            <div class="skill-bar">
-              <div class="skill-progress" style="width: 80%; animation-play-state: paused;"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <footer>
-        <p>© <span class="year">2026</span> Zentrix. Built with ❤️ on GitHub Pages.</p>
-      </footer>
+    <div class="clock-container">
+        <div id="clock">00:00:00</div>
+        <div id="date" class="date-info">正在同步时间...</div>
     </div>
 
-    <div id="projects" class="page">
-      <div class="container">
-        <h2 class="section-title">我的 <span>项目</span></h2>
-        <div class="projects-grid">
-          <div class="project-card">
-            <div class="project-image">🚀</div>
-            <div class="project-content">
-              <h3 class="project-title">个人主页</h3>
-              <p class="project-description">基于 GitHub Pages 构建的现代化个人主页，包含动态粒子效果和流畅的页面切换动画。</p>
-              <div class="project-tags">
-                <span class="tag">HTML5</span>
-                <span class="tag">CSS3</span>
-                <span class="tag">JavaScript</span>
-              </div>
-              <div class="project-links">
-                <a href="#" class="project-link">查看代码 →</a>
-                <a href="#" class="project-link">在线演示 →</a>
-              </div>
-            </div>
-          </div>
-          <div class="project-card">
-            <div class="project-image">💻</div>
-            <div class="project-content">
-              <h3 class="project-title">待办应用</h3>
-              <p class="project-description">一个美观现代化的待办事项管理应用，支持拖拽排序、本地存储和深色主题。</p>
-              <div class="project-tags">
-                <span class="tag">React</span>
-                <span class="tag">Tailwind</span>
-                <span class="tag">TypeScript</span>
-              </div>
-              <div class="project-links">
-                <a href="#" class="project-link">查看代码 →</a>
-                <a href="#" class="project-link">在线演示 →</a>
-              </div>
-            </div>
-          </div>
-          <div class="project-card">
-            <div class="project-image">🎨</div>
-            <div class="project-content">
-              <h3 class="project-title">画板工具</h3>
-              <p class="project-description">基于 Canvas 的在线绘图工具，支持多种画笔样式、颜色选择和导出功能。</p>
-              <div class="project-tags">
-                <span class="tag">Canvas</span>
-                <span class="tag">JavaScript</span>
-                <span class="tag">CSS</span>
-              </div>
-              <div class="project-links">
-                <a href="#" class="project-link">查看代码 →</a>
-                <a href="#" class="project-link">在线演示 →</a>
-              </div>
-            </div>
-          </div>
-          <div class="project-card">
-            <div class="project-image">🌐</div>
-            <div class="project-content">
-              <h3 class="project-title">天气应用</h3>
-              <p class="project-description">美观的天气预报应用，支持地理位置查询、七日预报和空气质量展示。</p>
-              <div class="project-tags">
-                <span class="tag">Vue.js</span>
-                <span class="tag">API</span>
-                <span class="tag">Axios</span>
-              </div>
-              <div class="project-links">
-                <a href="#" class="project-link">查看代码 →</a>
-                <a href="#" class="project-link">在线演示 →</a>
-              </div>
-            </div>
-          </div>
-          <div class="project-card">
-            <div class="project-image">📷</div>
-            <div class="project-content">
-              <h3 class="project-title">图片画廊</h3>
-              <p class="project-description">响应式图片画廊展示，支持瀑布流布局、懒加载和灯箱预览功能。</p>
-              <div class="project-tags">
-                <span class="tag">CSS Grid</span>
-                <span class="tag">JavaScript</span>
-                <span class="tag">Responsive</span>
-              </div>
-              <div class="project-links">
-                <a href="#" class="project-link">查看代码 →</a>
-                <a href="#" class="project-link">在线演示 →</a>
-              </div>
-            </div>
-          </div>
-          <div class="project-card">
-            <div class="project-image">🔧</div>
-            <div class="project-content">
-              <h3 class="project-title">添加更多项目</h3>
-              <p class="project-description">你可以继续在这里添加更多有趣的项目，展示你的作品和能力。</p>
-              <div class="project-tags">
-                <span class="tag">Coming Soon</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/zentrix566" class="project-link">查看 GitHub →</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <footer>
-        <p>© <span class="year">2026</span> Zentrix. Built with ❤️ on GitHub Pages.</p>
-      </footer>
-    </div>
+    <script>
+        function startClock() {
+            const clockElement = document.getElementById('clock');
+            const dateElement = document.getElementById('date');
 
-    <div id="contact" class="page">
-      <div class="container">
-        <h2 class="section-title">联系 <span>我</span></h2>
-        <div class="contact-container">
-          <div class="contact-info">
-            <div class="contact-item">
-              <div class="contact-icon">📧</div>
-              <div class="contact-label">邮箱</div>
-              <div class="contact-value">
-                <a href="mailto:zentrix566@gmail.com">zentrix566@gmail.com</a>
-              </div>
-            </div>
-            <div class="contact-item">
-              <div class="contact-icon">🐙</div>
-              <div class="contact-label">GitHub</div>
-              <div class="contact-value">
-                <a href="https://github.com/zentrix566" target="_blank">@zentrix566</a>
-              </div>
-            </div>
-          </div>
-          <div style="text-align: center; margin-top: 2rem;">
-            <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.8;">
-              欢迎通过以下方式联系我，一起探讨技术、交流想法，或者合作开发有趣的项目！
-            </p>
-          </div>
-          <div class="social-links">
-            <a href="https://github.com/zentrix566" target="_blank" class="social-link" title="GitHub">
-              <span>🐙</span>
-            </a>
-            <a href="mailto:zentrix566@gmail.com" class="social-link" title="Email">
-              <span>📧</span>
-            </a>
-            <a href="#" class="social-link" title="LinkedIn">
-              <span>💼</span>
-            </a>
-            <a href="#" class="social-link" title="Blog">
-              <span>📝</span>
-            </a>
-          </div>
-        </div>
-      </div>
-      <footer>
-        <p>© <span class="year">2026</span> Zentrix. Built with ❤️ on GitHub Pages.</p>
-      </footer>
-    </div>
-  </div>
+            function update() {
+                const now = new Date();
+                
+                const h = String(now.getHours()).padStart(2, '0');
+                const m = String(now.getMinutes()).padStart(2, '0');
+                const s = String(now.getSeconds()).padStart(2, '0');
+                clockElement.innerText = h + ":" + m + ":" + s;
 
-  <script src="./js/main.js"></script>
-  <script>
-    document.querySelectorAll('.year').forEach(el => {
-      el.textContent = new Date().getFullYear();
-    });
-  </script>
+                const y = now.getFullYear();
+                const mo = now.getMonth() + 1;
+                const d = now.getDate();
+                const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+                dateElement.innerText = y + "年" + mo + "月" + d + "日 " + days[now.getDay()];
+            }
+
+            update();
+            setInterval(update, 1000);
+        }
+        window.onload = startClock;
+    </script>
+
 </body>
 </html>
