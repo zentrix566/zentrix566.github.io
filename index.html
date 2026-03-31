@@ -15,7 +15,6 @@
         <ul class="nav-links">
           <li><a href="#" data-page="home" class="active">首页</a></li>
           <li><a href="#about" data-page="about">关于</a></li>
-          <li><a href="#projects" data-page="projects">项目</a></li>
           <li><a href="#contact" data-page="contact">联系</a></li>
         </ul>
         <div class="menu-toggle">
@@ -31,27 +30,101 @@
         <div class="hero">
           <div class="hero-content">
             <h1 class="hero-title">
-              你好，我是 <span class="gradient-text">Zentrix</span>
+              <span class="gradient-text">Zentrix</span> 的作品集
             </h1>
             <p class="hero-subtitle">
-              欢迎来到我的<span class="gradient-text">赛博空间</span>，探索代码与创意的世界
+              探索 DevOps & Cloud Native 的无限可能
             </p>
-            <div class="hero-buttons">
-              <a href="#about" data-page="about" class="btn btn-primary">查看关于我</a>
-              <a href="#projects" data-page="projects" class="btn btn-outline">浏览项目</a>
+          </div>
+        </div>
+        <h2 class="section-title">我的 <span>项目</span></h2>
+        <div class="projects-grid">
+          <div class="project-card" onclick="window.location.href='./projects/opsagentai.html'">
+            <div class="project-image">🤖</div>
+            <div class="project-content">
+              <h3 class="project-title">OpsAgentAI</h3>
+              <p class="project-description">基于 RAG 架构与 Dify 编排的 DevOps 故障智能自愈平台</p>
+              <div class="project-tags">
+                <span class="tag">DevOps</span>
+                <span class="tag">AI</span>
+                <span class="tag">RAG</span>
+                <span class="tag">Dify</span>
+              </div>
+              <div class="project-links">
+                <a href="./projects/opsagentai.html" class="project-link">查看详情 →</a>
+              </div>
             </div>
-            <div class="hero-stats">
-              <div class="stat">
-                <div class="stat-number">5</div>
-                <div class="stat-label">项目经验</div>
+          </div>
+          <div class="project-card">
+            <div class="project-image">☸️</div>
+            <div class="project-content">
+              <h3 class="project-title">Kubernetes 集群运维平台</h3>
+              <p class="project-description">自动化 Kubernetes 集群管理平台，支持多集群、监控告警和一键故障诊断。</p>
+              <div class="project-tags">
+                <span class="tag">K8s</span>
+                <span class="tag">Go</span>
+                <span class="tag">Prometheus</span>
               </div>
-              <div class="stat">
-                <div class="stat-number">100</div>
-                <div class="stat-label">代码提交</div>
+              <div class="project-links">
+                <a href="#" class="project-link">即将开源 →</a>
               </div>
-              <div class="stat">
-                <div class="stat-number">2</div>
-                <div class="stat-label">开源项目</div>
+            </div>
+          </div>
+          <div class="project-card">
+            <div class="project-image">🚀</div>
+            <div class="project-content">
+              <h3 class="project-title">GitOps 持续部署工具</h3>
+              <p class="project-description">轻量化 GitOps 持续部署工具，支持 ArgoCD 替代方案，更快更简单。</p>
+              <div class="project-tags">
+                <span class="tag">GitOps</span>
+                <span class="tag">CI/CD</span>
+                <span class="tag">Rust</span>
+              </div>
+              <div class="project-links">
+                <a href="#" class="project-link">开发中 →</a>
+              </div>
+            </div>
+          </div>
+          <div class="project-card">
+            <div class="project-image">🔐</div>
+            <div class="project-content">
+              <h3 class="project-title">云原生安全扫描器</h3>
+              <p class="project-description">容器镜像与 Kubernetes 配置安全扫描工具，发现漏洞提前预警。</p>
+              <div class="project-tags">
+                <span class="tag">Security</span>
+                <span class="tag">DevSecOps</span>
+                <span class="tag">Python</span>
+              </div>
+              <div class="project-links">
+                <a href="#" class="project-link">规划中 →</a>
+              </div>
+            </div>
+          </div>
+          <div class="project-card">
+            <div class="project-image">📊</div>
+            <div class="project-content">
+              <h3 class="project-title">可观测性平台</h3>
+              <p class="project-description">一体化可观测性平台，聚合日志、指标、链路追踪一站式分析。</p>
+              <div class="project-tags">
+                <span class="tag">Observability</span>
+                <span class="tag">OpenTelemetry</span>
+                <span class="tag">Grafana</span>
+              </div>
+              <div class="project-links">
+                <a href="#" class="project-link">设计中 →</a>
+              </div>
+            </div>
+          </div>
+          <div class="project-card">
+            <div class="project-image">✨</div>
+            <div class="project-content">
+              <h3 class="project-title">新项目</h>
+              <p class="project-description">欢迎添加更多有趣的云原生项目，持续更新中...</p>
+              <div class="project-tags">
+                <span class="tag">Coming Soon</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/zentrix566" class="project-link">关注 GitHub →</a>
               </div>
             </div>
           </div>
@@ -70,29 +143,29 @@
             <div class="about-card-icon">👨‍💻</div>
             <h3>关于我</h3>
             <p>
-              我是一名对编程充满热情的开发者，正在探索现代 Web 开发的世界。热爱开源，喜欢折腾新技术，不断学习和成长中。
+              云原生 & DevOps 领域实践者，热衷于探索现代化软件工程实践。热爱开源，持续学习，不断构建更优雅的自动化工具。
             </p>
           </div>
           <div class="about-card">
             <div class="about-card-icon">🚀</div>
-            <h3>兴趣方向</h3>
+            <h3>技术方向</h3>
             <p>
-              对前端开发、用户体验设计充满兴趣，同时也在探索全栈开发。喜欢创造美观、实用且高性能的数字产品。
+              专注于 DevOps、CI/CD、Kubernetes、可观测性、AI 赋能运维等领域，追求简单、高效、自动化的工程理念。
             </p>
           </div>
           <div class="about-card">
-            <div class="about-card-icon">🎨</div>
-            <h3>设计理念</h3>
+            <div class="about-card-icon">🎯</div>
+            <h3>开源信仰</h3>
             <p>
-              相信简洁就是美，追求优雅的代码和用户体验。每一行代码都应该有它存在的意义。
+              相信开源的力量，通过代码分享推动技术进步，在社区交流中共同成长。
             </p>
           </div>
         </div>
         <div class="skills">
-          <h3 style="text-align: center; margin: 3rem 0 2rem; font-size: 2rem;">技能掌握</h3>
+          <h3 style="text-align: center; margin: 3rem 0 2rem; font-size: 2rem;">技术栈</h3>
           <div class="skill-item">
             <div class="skill-info">
-              <span class="skill-name">HTML/CSS</span>
+              <span class="skill-name">Kubernetes / 云原生</span>
               <span class="skill-percent">90%</span>
             </div>
             <div class="skill-bar">
@@ -101,16 +174,25 @@
           </div>
           <div class="skill-item">
             <div class="skill-info">
-              <span class="skill-name">JavaScript</span>
-              <span class="skill-percent">85%</span>
+              <span class="skill-name">DevOps / CI/CD</span>
+              <span class="skill-percent">88%</span>
             </div>
             <div class="skill-bar">
-              <div class="skill-progress" style="width: 85%; animation-play-state: paused;"></div>
+              <div class="skill-progress" style="width: 88%; animation-play-state: paused;"></div>
             </div>
           </div>
           <div class="skill-item">
             <div class="skill-info">
-              <span class="skill-name">React/Vue</span>
+              <span class="skill-name">Python / Go / Rust</span>
+              <span class="skill-percent">80%</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-progress" style="width: 80%; animation-play-state: paused;"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-info">
+              <span class="skill-name">AI / RAG / Agent</span>
               <span class="skill-percent">75%</span>
             </div>
             <div class="skill-bar">
@@ -119,124 +201,11 @@
           </div>
           <div class="skill-item">
             <div class="skill-info">
-              <span class="skill-name">Node.js</span>
-              <span class="skill-percent">70%</span>
+              <span class="skill-name">可观测性 / SRE</span>
+              <span class="skill-percent">85%</span>
             </div>
             <div class="skill-bar">
-              <div class="skill-progress" style="width: 70%; animation-play-state: paused;"></div>
-            </div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-info">
-              <span class="skill-name">Git/GitHub</span>
-              <span class="skill-percent">80%</span>
-            </div>
-            <div class="skill-bar">
-              <div class="skill-progress" style="width: 80%; animation-play-state: paused;"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <footer>
-        <p>© <span class="year">2026</span> Zentrix. Built with ❤️ on GitHub Pages.</p>
-      </footer>
-    </div>
-
-    <div id="projects" class="page">
-      <div class="container">
-        <h2 class="section-title">我的 <span>项目</span></h2>
-        <div class="projects-grid">
-          <div class="project-card">
-            <div class="project-image">🚀</div>
-            <div class="project-content">
-              <h3 class="project-title">个人主页</h3>
-              <p class="project-description">基于 GitHub Pages 构建的现代化个人主页，包含动态粒子效果和流畅的页面切换动画。</p>
-              <div class="project-tags">
-                <span class="tag">HTML5</span>
-                <span class="tag">CSS3</span>
-                <span class="tag">JavaScript</span>
-              </div>
-              <div class="project-links">
-                <a href="#" class="project-link">查看代码 →</a>
-                <a href="#" class="project-link">在线演示 →</a>
-              </div>
-            </div>
-          </div>
-          <div class="project-card">
-            <div class="project-image">💻</div>
-            <div class="project-content">
-              <h3 class="project-title">待办应用</h3>
-              <p class="project-description">一个美观现代化的待办事项管理应用，支持拖拽排序、本地存储和深色主题。</p>
-              <div class="project-tags">
-                <span class="tag">React</span>
-                <span class="tag">Tailwind</span>
-                <span class="tag">TypeScript</span>
-              </div>
-              <div class="project-links">
-                <a href="#" class="project-link">查看代码 →</a>
-                <a href="#" class="project-link">在线演示 →</a>
-              </div>
-            </div>
-          </div>
-          <div class="project-card">
-            <div class="project-image">🎨</div>
-            <div class="project-content">
-              <h3 class="project-title">画板工具</h3>
-              <p class="project-description">基于 Canvas 的在线绘图工具，支持多种画笔样式、颜色选择和导出功能。</p>
-              <div class="project-tags">
-                <span class="tag">Canvas</span>
-                <span class="tag">JavaScript</span>
-                <span class="tag">CSS</span>
-              </div>
-              <div class="project-links">
-                <a href="#" class="project-link">查看代码 →</a>
-                <a href="#" class="project-link">在线演示 →</a>
-              </div>
-            </div>
-          </div>
-          <div class="project-card">
-            <div class="project-image">🌐</div>
-            <div class="project-content">
-              <h3 class="project-title">天气应用</h3>
-              <p class="project-description">美观的天气预报应用，支持地理位置查询、七日预报和空气质量展示。</p>
-              <div class="project-tags">
-                <span class="tag">Vue.js</span>
-                <span class="tag">API</span>
-                <span class="tag">Axios</span>
-              </div>
-              <div class="project-links">
-                <a href="#" class="project-link">查看代码 →</a>
-                <a href="#" class="project-link">在线演示 →</a>
-              </div>
-            </div>
-          </div>
-          <div class="project-card">
-            <div class="project-image">📷</div>
-            <div class="project-content">
-              <h3 class="project-title">图片画廊</h3>
-              <p class="project-description">响应式图片画廊展示，支持瀑布流布局、懒加载和灯箱预览功能。</p>
-              <div class="project-tags">
-                <span class="tag">CSS Grid</span>
-                <span class="tag">JavaScript</span>
-                <span class="tag">Responsive</span>
-              </div>
-              <div class="project-links">
-                <a href="#" class="project-link">查看代码 →</a>
-                <a href="#" class="project-link">在线演示 →</a>
-              </div>
-            </div>
-          </div>
-          <div class="project-card">
-            <div class="project-image">🔧</div>
-            <div class="project-content">
-              <h3 class="project-title">添加更多项目</h3>
-              <p class="project-description">你可以继续在这里添加更多有趣的项目，展示你的作品和能力。</p>
-              <div class="project-tags">
-                <span class="tag">Coming Soon</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/zentrix566" class="project-link">查看 GitHub →</a>
-              </div>
+              <div class="skill-progress" style="width: 85%; animation-play-state: paused;"></div>
             </div>
           </div>
         </div>
@@ -268,7 +237,7 @@
           </div>
           <div style="text-align: center; margin-top: 2rem;">
             <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.8;">
-              欢迎通过以下方式联系我，一起探讨技术、交流想法，或者合作开发有趣的项目！
+              欢迎交流云原生、DevOps、AI 运维相关话题，期待与你一起构建更好的自动化工具！
             </p>
           </div>
           <div class="social-links">
