@@ -24,7 +24,7 @@ class ParticleCanvas {
         radius: Math.random() * 2 + 1,
         speedX: (Math.random() - 0.5) * 0.5,
         speedY: (Math.random() - 0.5) * 0.5,
-        color: `rgba(${99 + Math.random() * 40}, ${102 + Math.random() * 100}, ${241 + Math.random() * 50}, ${0.3 + Math.random() * 0.4})`
+        color: `rgba(${99 + Math.random() * 40}, ${102 + Math.random() * 100}, ${241 + Math.random() * 50}, ${0.15 + Math.random() * 0.2})`
       });
     }
   }
