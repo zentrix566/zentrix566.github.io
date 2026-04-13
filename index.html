@@ -1,288 +1,99 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>赛博空间 | Cyber Space</title>
-  <meta name="description" content="欢迎来到我的赛博空间 🚀">
-  <link rel="stylesheet" href="./css/main.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>性格测试 - 发现真正的自己</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="content-wrapper">
-    <nav>
-      <div class="nav-container">
-        <div class="logo">CyberSpace</div>
-        <ul class="nav-links">
-          <li><a href="#" data-page="home" class="active">首页</a></li>
-          <li><a href="#about" data-page="about">关于</a></li>
-          <li><a href="#contact" data-page="contact">联系</a></li>
-        </ul>
-        <div class="menu-toggle">
-          <span></span>
-          <span></span>
-          <span></span>
+    <div class="container">
+        <!-- 欢迎页面 -->
+        <div id="welcome" class="page active">
+            <div class="welcome-content">
+                <h1 class="title">性格测试</h1>
+                <p class="subtitle">发现真正的自己</p>
+                <div class="intro">
+                    <p>这个测试包含 20 道题目，大约需要 3-5 分钟完成。</p>
+                    <p>请根据你的第一直觉选择，不要过多思考。</p>
+                </div>
+                <button id="start-btn" class="btn primary-btn">开始测试</button>
+                <div class="share-hint">做完可以分享给你的朋友哦 ✨</div>
+            </div>
         </div>
-      </div>
-    </nav>
 
-    <div id="home" class="page active">
-      <div class="container">
-        <div class="hero">
-          <div class="hero-content">
-            <h1 class="hero-title">
-              <span class="gradient-text">Zentrix</span> 的作品集
-            </h1>
-            <p class="hero-subtitle">
-              探索 DevOps & Cloud Native 的无限可能
-            </p>
-          </div>
+        <!-- 问答页面 -->
+        <div id="quiz" class="page">
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+            <div class="question-container">
+                <h2 id="question-text" class="question-text"></h2>
+                <div id="options" class="options-container"></div>
+            </div>
+            <div class="navigation">
+                <button id="prev-btn" class="btn secondary-btn" disabled>上一题</button>
+                <span id="question-count" class="question-count">1 / 20</span>
+                <button id="next-btn" class="btn primary-btn">下一题</button>
+            </div>
         </div>
-        <h2 class="section-title">我的 <span>项目</span></h2>
-        <div class="projects-grid">
-          <div class="project-card" onclick="window.location.href='./projects/opsagentai.html'">
-            <div class="project-image">🤖</div>
-            <div class="project-content">
-              <h3 class="project-title">OpsAgentAI</h3>
-              <p class="project-description">基于 RAG 架构与 Dify 编排的 DevOps 故障智能自愈平台</p>
-              <div class="project-tags">
-                <span class="tag">DevOps</span>
-                <span class="tag">AI</span>
-                <span class="tag">RAG</span>
-                <span class="tag">Dify</span>
-              </div>
-              <div class="project-links">
-                <a href="./projects/opsagentai.html" class="project-link">查看详情 →</a>
-              </div>
+
+        <!-- 加载页面 -->
+        <div id="loading" class="page">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <p>正在分析你的性格...</p>
             </div>
-          </div>
-          <div class="project-card">
-            <div class="project-image">☸️</div>
-            <div class="project-content">
-              <h3 class="project-title">Kubernetes 集群运维平台</h3>
-              <p class="project-description">自动化 Kubernetes 集群管理平台，支持多集群、监控告警和一键故障诊断。</p>
-              <div class="project-tags">
-                <span class="tag">K8s</span>
-                <span class="tag">Go</span>
-                <span class="tag">Prometheus</span>
-              </div>
-              <div class="project-links">
-                <a href="#" class="project-link">即将开源 →</a>
-              </div>
-            </div>
-          </div>
-          <div class="project-card" onclick="window.location.href='./projects/cicd-architecture.html'">
-            <div class="project-image">⚙️</div>
-            <div class="project-content">
-              <h3 class="project-title">企业级 CI/CD 平台</h3>
-              <p class="project-description">覆盖传统到云原生的标准化持续交付，脚手架自动化+质量门禁+全场景发布</p>
-              <div class="project-tags">
-                <span class="tag">CI/CD</span>
-                <span class="tag">Jenkins</span>
-                <span class="tag">Kubernetes</span>
-                <span class="tag">GitHub Actions</span>
-              </div>
-              <div class="project-links">
-                <a href="./projects/cicd-architecture.html" class="project-link">查看详情 →</a>
-              </div>
-            </div>
-          </div>
-          <div class="project-card">
-            <div class="project-image">🚀</div>
-            <div class="project-content">
-              <h3 class="project-title">GitOps 持续部署工具</h3>
-              <p class="project-description">轻量化 GitOps 持续部署工具，支持 ArgoCD 替代方案，更快更简单。</p>
-              <div class="project-tags">
-                <span class="tag">GitOps</span>
-                <span class="tag">CI/CD</span>
-                <span class="tag">Rust</span>
-              </div>
-              <div class="project-links">
-                <a href="#" class="project-link">开发中 →</a>
-              </div>
-            </div>
-          </div>
-          <div class="project-card">
-            <div class="project-image">🔐</div>
-            <div class="project-content">
-              <h3 class="project-title">云原生安全扫描器</h3>
-              <p class="project-description">容器镜像与 Kubernetes 配置安全扫描工具，发现漏洞提前预警。</p>
-              <div class="project-tags">
-                <span class="tag">Security</span>
-                <span class="tag">DevSecOps</span>
-                <span class="tag">Python</span>
-              </div>
-              <div class="project-links">
-                <a href="#" class="project-link">规划中 →</a>
-              </div>
-            </div>
-          </div>
-          <div class="project-card">
-            <div class="project-image">📊</div>
-            <div class="project-content">
-              <h3 class="project-title">可观测性平台</h3>
-              <p class="project-description">一体化可观测性平台，聚合日志、指标、链路追踪一站式分析。</p>
-              <div class="project-tags">
-                <span class="tag">Observability</span>
-                <span class="tag">OpenTelemetry</span>
-                <span class="tag">Grafana</span>
-              </div>
-              <div class="project-links">
-                <a href="#" class="project-link">设计中 →</a>
-              </div>
-            </div>
-          </div>
-          <div class="project-card">
-            <div class="project-image">✨</div>
-            <div class="project-content">
-              <h3 class="project-title">新项目</h>
-              <p class="project-description">欢迎添加更多有趣的云原生项目，持续更新中...</p>
-              <div class="project-tags">
-                <span class="tag">Coming Soon</span>
-              </div>
-              <div class="project-links">
-                <a href="https://github.com/zentrix566" class="project-link">关注 GitHub →</a>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-      <footer>
-        <p>© <span class="year">2026</span> Zentrix. Built with ❤️ on GitHub Pages.</p>
-      </footer>
+
+        <!-- 结果页面 -->
+        <div id="result" class="page">
+            <div class="result-content">
+                <h2 class="result-title">你的性格类型是</h2>
+                <div id="personality-type" class="personality-type"></div>
+                <div id="personality-title" class="personality-title"></div>
+                <div id="personality-desc" class="personality-desc"></div>
+
+                <div class="personality-traits">
+                    <div class="trait">
+                        <span class="trait-label">能量倾向</span>
+                        <span id="energy-trait" class="trait-value"></span>
+                    </div>
+                    <div class="trait">
+                        <span class="trait-label">认知方式</span>
+                        <span id="cognitive-trait" class="trait-value"></span>
+                    </div>
+                    <div class="trait">
+                        <span class="trait-label">决策方式</span>
+                        <span id="judging-trait" class="trait-value"></span>
+                    </div>
+                    <div class="trait">
+                        <span class="trait-label">生活态度</span>
+                        <span id="lifestyle-trait" class="trait-value"></span>
+                    </div>
+                </div>
+
+                <div id="personality-strengths" class="strengths-section">
+                    <h3>你的优势</h3>
+                    <div id="strengths-list" class="strengths-list"></div>
+                </div>
+
+                <div class="result-actions">
+                    <button id="retest-btn" class="btn secondary-btn">重新测试</button>
+                    <button id="share-btn" class="btn primary-btn">分享结果</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div id="about" class="page">
-      <div class="container">
-        <h2 class="section-title">关于 <span>我</span></h2>
-        <div class="about-grid">
-          <div class="about-card">
-            <div class="about-card-icon">👨‍💻</div>
-            <h3>关于我</h3>
-            <p>
-              云原生 & DevOps 领域实践者，热衷于探索现代化软件工程实践。热爱开源，持续学习，不断构建更优雅的自动化工具。
-            </p>
-          </div>
-          <div class="about-card">
-            <div class="about-card-icon">🚀</div>
-            <h3>技术方向</h3>
-            <p>
-              专注于 DevOps、CI/CD、Kubernetes、可观测性、AI 赋能运维等领域，追求简单、高效、自动化的工程理念。
-            </p>
-          </div>
-          <div class="about-card">
-            <div class="about-card-icon">🎯</div>
-            <h3>开源信仰</h3>
-            <p>
-              相信开源的力量，通过代码分享推动技术进步，在社区交流中共同成长。
-            </p>
-          </div>
-        </div>
-        <div class="skills">
-          <h3 style="text-align: center; margin: 3rem 0 2rem; font-size: 2rem;">技术栈</h3>
-          <div class="skill-item">
-            <div class="skill-info">
-              <span class="skill-name">Kubernetes / 云原生</span>
-              <span class="skill-percent">90%</span>
-            </div>
-            <div class="skill-bar">
-              <div class="skill-progress" style="width: 90%; animation-play-state: paused;"></div>
-            </div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-info">
-              <span class="skill-name">DevOps / CI/CD</span>
-              <span class="skill-percent">88%</span>
-            </div>
-            <div class="skill-bar">
-              <div class="skill-progress" style="width: 88%; animation-play-state: paused;"></div>
-            </div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-info">
-              <span class="skill-name">Python / Go / Rust</span>
-              <span class="skill-percent">80%</span>
-            </div>
-            <div class="skill-bar">
-              <div class="skill-progress" style="width: 80%; animation-play-state: paused;"></div>
-            </div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-info">
-              <span class="skill-name">AI / RAG / Agent</span>
-              <span class="skill-percent">75%</span>
-            </div>
-            <div class="skill-bar">
-              <div class="skill-progress" style="width: 75%; animation-play-state: paused;"></div>
-            </div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-info">
-              <span class="skill-name">可观测性 / SRE</span>
-              <span class="skill-percent">85%</span>
-            </div>
-            <div class="skill-bar">
-              <div class="skill-progress" style="width: 85%; animation-play-state: paused;"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <footer>
-        <p>© <span class="year">2026</span> Zentrix. Built with ❤️ on GitHub Pages.</p>
-      </footer>
-    </div>
+    <footer class="footer">
+        <p>Made with ❤️ by <a href="https://github.com/zentrix566" target="_blank">zentrix566</a></p>
+    </footer>
 
-    <div id="contact" class="page">
-      <div class="container">
-        <h2 class="section-title">联系 <span>我</span></h2>
-        <div class="contact-container">
-          <div class="contact-info">
-            <div class="contact-item">
-              <div class="contact-icon">📧</div>
-              <div class="contact-label">邮箱</div>
-              <div class="contact-value">
-                <a href="mailto:zentrix566@gmail.com">zentrix566@gmail.com</a>
-              </div>
-            </div>
-            <div class="contact-item">
-              <div class="contact-icon">🐙</div>
-              <div class="contact-label">GitHub</div>
-              <div class="contact-value">
-                <a href="https://github.com/zentrix566" target="_blank">@zentrix566</a>
-              </div>
-            </div>
-          </div>
-          <div style="text-align: center; margin-top: 2rem;">
-            <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.8;">
-              欢迎交流云原生、DevOps、AI 运维相关话题，期待与你一起构建更好的自动化工具！
-            </p>
-          </div>
-          <div class="social-links">
-            <a href="https://github.com/zentrix566" target="_blank" class="social-link" title="GitHub">
-              <span>🐙</span>
-            </a>
-            <a href="mailto:zentrix566@gmail.com" class="social-link" title="Email">
-              <span>📧</span>
-            </a>
-            <a href="#" class="social-link" title="LinkedIn">
-              <span>💼</span>
-            </a>
-            <a href="#" class="social-link" title="Blog">
-              <span>📝</span>
-            </a>
-          </div>
-        </div>
-      </div>
-      <footer>
-        <p>© <span class="year">2026</span> Zentrix. Built with ❤️ on GitHub Pages.</p>
-      </footer>
-    </div>
-  </div>
-
-  <script src="./js/main.js"></script>
-  <script>
-    document.querySelectorAll('.year').forEach(el => {
-      el.textContent = new Date().getFullYear();
-    });
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
