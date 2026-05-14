@@ -3,97 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>性格测试 - 发现真正的自己</title>
+    <title>zentrix566</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <!-- 欢迎页面 -->
-        <div id="welcome" class="page active">
-            <div class="welcome-content">
-                <h1 class="title">性格测试</h1>
-                <p class="subtitle">发现真正的自己</p>
-                <div class="intro">
-                    <p>这个测试包含 20 道题目，大约需要 3-5 分钟完成。</p>
-                    <p>请根据你的第一直觉选择，不要过多思考。</p>
-                </div>
-                <button id="start-btn" class="btn primary-btn">开始测试</button>
-                <div class="share-hint">做完可以分享给你的朋友哦 ✨</div>
-            </div>
-        </div>
-
-        <!-- 问答页面 -->
-        <div id="quiz" class="page">
-            <div class="progress-bar">
-                <div id="progress-fill" class="progress-fill"></div>
-            </div>
-            <div class="question-container">
-                <h2 id="question-text" class="question-text"></h2>
-                <div id="options" class="options-container"></div>
-            </div>
-            <div class="navigation">
-                <button id="prev-btn" class="btn secondary-btn" disabled>上一题</button>
-                <span id="question-count" class="question-count">1 / 20</span>
-                <button id="next-btn" class="btn primary-btn">下一题</button>
-            </div>
-        </div>
-
-        <!-- 加载页面 -->
-        <div id="loading" class="page">
-            <div class="loading-content">
-                <div class="spinner"></div>
-                <p>正在分析你的性格...</p>
-            </div>
-        </div>
-
-        <!-- 结果页面 -->
-        <div id="result" class="page">
-            <div class="result-content">
-                <h2 class="result-title">你的性格类型是</h2>
-                <div id="personality-type" class="personality-type"></div>
-                <div id="personality-title" class="personality-title"></div>
-                <div id="personality-desc" class="personality-desc"></div>
-
-                <div class="personality-traits">
-                    <div class="trait">
-                        <span class="trait-label">能量倾向</span>
-                        <span id="energy-trait" class="trait-value"></span>
-                    </div>
-                    <div class="trait">
-                        <span class="trait-label">认知方式</span>
-                        <span id="cognitive-trait" class="trait-value"></span>
-                    </div>
-                    <div class="trait">
-                        <span class="trait-label">决策方式</span>
-                        <span id="judging-trait" class="trait-value"></span>
-                    </div>
-                    <div class="trait">
-                        <span class="trait-label">生活态度</span>
-                        <span id="lifestyle-trait" class="trait-value"></span>
-                    </div>
-                </div>
-
-                <div id="personality-strengths" class="strengths-section">
-                    <h3>你的优势</h3>
-                    <div id="strengths-list" class="strengths-list"></div>
-                </div>
-
-                <div class="result-actions">
-                    <button id="retest-btn" class="btn secondary-btn">重新测试</button>
-                    <button id="share-btn" class="btn primary-btn">分享结果</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <footer class="footer">
-        <p>Made with ❤️ by <a href="https://github.com/zentrix566" target="_blank">zentrix566</a></p>
-    </footer>
-
-    <script src="script.js"></script>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
 </body>
 </html>

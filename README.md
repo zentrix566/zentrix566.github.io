@@ -1,57 +1,94 @@
-# 性格测试
+# zentrix566 个人主页
 
-一个基于 16 型人格（MBTI）的在线性格测试网站。
+个人工具集合网站，基于 Vue 3 + Vite 构建。
 
 ✨ **在线体验：** [https://zentrix566.github.io/](https://zentrix566.github.io/)
 
-## 功能特点
+## 功能模块
 
-- 📝 **20 道精选题目** - 覆盖四个核心性格维度
-- 🎨 **现代化 UI 设计** - 渐变背景、平滑动画、卡片布局
-- 📱 **完全响应式** - 完美适配手机、平板、桌面设备
-- ⚡ **纯静态实现** - 无需后端，直接部署
-- 📊 **进度实时显示** - 直观展示测试进度
-- 🔄 **支持重新测试** - 随时可以开始新测试
-- 📤 **一键分享结果** - 支持原生分享 API，自动复制链接
-- ⌨️ **键盘快捷键支持** - 回车确认，方向键导航
+### 🏃 间歇训练
 
-## 性格维度
+跑步间歇训练数据分析工具
 
-测试基于四个维度评估你的性格：
+- 📊 配速趋势图 - 按训练分组展示每次训练的配速变化
+- 📈 评级分布 - 自动评级并统计分布情况
+- 💾 数据持久化 - 本地存储训练数据，刷新不丢失
+- 📤 数据导入/导出 - 支持 JSON 格式备份
+- ➕ 添加新记录 - 快速录入训练数据
 
-1. **能量倾向**：外向 (E) / 内向 (I)
-2. **认知方式**：感觉 (S) / 直觉 (N)
-3. **决策方式**：思考 (T) / 情感 (F)
-4. **生活态度**：判断 (J) / 知觉 (P)
+**评级标准：**
+- 非常快：1分50秒以内
+- 比较快：1分50秒 - 1分55秒
+- 有点快：1分55秒 - 1分57秒
+- 优秀：1分59秒 - 2分01秒
+- 良：1分57秒 - 1分59秒 / 2分01秒 - 2分03秒
+- 一般：2分03秒 - 2分05秒
+- 差：2分05秒 - 2分10秒
+- 很差：2分10秒以外
 
-组合后产生 **16 种不同人格类型**，每种类型都有详细描述和优势分析。
+### 🔧 工具
+- 开发中...
+
+### 📁 项目
+- 开发中...
+
+### ℹ️ 关于
+- 开发中...
+
+## 技术栈
+
+- **框架**：Vue 3
+- **构建工具**：Vite
+- **路由**：Vue Router
+- **图表**：Chart.js
+- **部署**：GitHub Pages
 
 ## 本地开发
 
-这是纯静态 HTML/CSS/JavaScript 项目，无需任何构建工具：
-
 ```bash
-# 克隆项目
-git clone https://github.com/zentrix566/zentrix566.github.io.git
-cd zentrix566.github.io
+# 安装依赖
+npm install
 
-# 直接用浏览器打开
-# Windows
-start index.html
-# macOS
-open index.html
+# 启动开发服务器
+npm run dev
+
+# 构建生产版本
+npm run build
+
+# 预览构建结果
+npm run preview
+```
+
+## 项目结构
+
+```
+zentrix566.github.io/
+├── src/
+│   ├── views/          # 页面组件
+│   │   ├── Home.vue            # 首页
+│   │   ├── IntervalTraining.vue # 间歇训练
+│   │   ├── Tools.vue           # 工具
+│   │   ├── Projects.vue        # 项目
+│   │   └── About.vue           # 关于
+│   ├── router/
+│   │   └── index.js    # 路由配置
+│   ├── App.vue         # 根组件
+│   ├── main.js         # 入口文件
+│   └── style.css       # 全局样式
+├── index.html
+├── package.json
+├── vite.config.js
+└── .github/workflows/  # GitHub Pages 部署配置
 ```
 
 ## 部署
 
-项目已经配置好 GitHub Pages 自动部署，推送到 `main` 分支即可自动更新。
-
-部署配置见：[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
+项目配置了 GitHub Pages 自动部署，推送到 `main` 分支会自动构建并部署。
 
 ## 许可证
 
 [MIT License](LICENSE) © zentrix566
 
-## 关于
+---
 
 Created with ❤️ by [zentrix566](https://github.com/zentrix566)

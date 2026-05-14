@@ -1,22 +1,27 @@
-# Site
-_site/
-.sass-cache/
-.jekyll-cache/
-.jekyll-metadata
-
-# Exclude from GitHub Pages
-node_modules/
-Gemfile
-Gemfile.lock
+# Logs
+logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# OS
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
 .DS_Store
-Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+# Claude
+.claude/
