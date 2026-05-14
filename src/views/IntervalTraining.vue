@@ -112,9 +112,9 @@
         <div class="setup-guide">
           <h4>📝 首次使用设置步骤：</h4>
           <ol>
-            <li>访问 <a href="https://github.com/settings/tokens/new?scopes=gist" target="_blank">GitHub Token 设置</a></li>
+            <li>访问 <a href="https://github.com/settings/tokens/new?scopes=gist" target="_blank" rel="noopener noreferrer">GitHub Token 设置</a></li>
             <li>Note 填写 "训练数据同步"，勾选 gist 权限，点击 Generate token</li>
-            <li>访问 <a href="https://gist.github.com/" target="_blank">创建 Gist</a>，新建文件名为 training-data.json</li>
+            <li>访问 <a href="https://gist.github.com/" target="_blank" rel="noopener noreferrer">创建 Gist</a>，新建文件名为 training-data.json</li>
             <li>将 Gist ID 复制到下方（Gist URL 中最后一串字符）</li>
           </ol>
         </div>
@@ -148,7 +148,7 @@ const chartRef = ref(null)
 const ratingChartRef = ref(null)
 const showAddModal = ref(false)
 const showGistModal = ref(false)
-const gistToken = ref(localStorage.getItem('gist_token') || '')
+const gistToken = ref(sessionStorage.getItem('gist_token') || '')
 const gistId = ref(localStorage.getItem('gist_id') || '')
 const syncStatus = ref('')
 let chartInstance = null
@@ -329,6 +329,12 @@ watch(trainingSessions, () => {
   saveToLocalStorage()
 }, { deep: true })
 
+// 校验时间格式
+const validateTimeFormat = (timeStr) => {
+  const regex = /^\d{2}:\d{2}\.\d{2}$/
+  return regex.test(timeStr)
+}
+
 // 添加训练记录
 const addSession = () => {
   if (!newSession.value.date || !newSession.value.lapsText) {
@@ -336,11 +342,18 @@ const addSession = () => {
     return
   }
 
-  const laps = newSession.value.lapsText
+  const lines = newSession.value.lapsText
     .split('\n')
     .map(line => line.trim())
     .filter(line => line)
-    .map(time => ({ time }))
+
+  const invalidLines = lines.filter(line => !validateTimeFormat(line))
+  if (invalidLines.length > 0) {
+    alert(`格式错误：${invalidLines.slice(0, 3).join(', ')}${invalidLines.length > 3 ? ' 等' : ''}\n正确格式：02:03.55`)
+    return
+  }
+
+  const laps = lines.map(time => ({ time }))
 
   const newSessionData = processSessionData({
     date: newSession.value.date,
@@ -371,7 +384,7 @@ const deleteSession = (date) => {
 
 // Gist 同步 - 保存配置
 const saveGistConfig = () => {
-  localStorage.setItem('gist_token', gistToken.value)
+  sessionStorage.setItem('gist_token', gistToken.value)
   localStorage.setItem('gist_id', gistId.value)
 }
 
@@ -425,7 +438,8 @@ const pullFromGist = async () => {
     const data = await res.json()
     const fileContent = data.files['training-data.json']?.content
     if (!fileContent) throw new Error('Gist 中没有 training-data.json 文件')
-    trainingSessions.value = JSON.parse(fileContent)
+    const rawData = JSON.parse(fileContent)
+    trainingSessions.value = rawData.map(processSessionData)
     syncStatus.value = '✅ 拉取成功！'
     setTimeout(() => { syncStatus.value = '' }, 2000)
   } catch (e) {
