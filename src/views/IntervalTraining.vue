@@ -426,13 +426,13 @@ const loadFromLocalStorage = () => {
   const saved = localStorage.getItem('intervalTrainingData')
   const version = localStorage.getItem('intervalTrainingVersion')
   // 版本号用于强制刷新数据
-  if (saved && version === 'v2') {
+  if (saved && version === 'v3') {
     trainingSessions.value = JSON.parse(saved)
   } else {
     // 使用初始数据
     trainingSessions.value = initialData.map(processSessionData)
     saveToLocalStorage()
-    localStorage.setItem('intervalTrainingVersion', 'v2')
+    localStorage.setItem('intervalTrainingVersion', 'v3')
   }
 }
 
@@ -633,7 +633,16 @@ const updateCharts = () => {
     options: {
       responsive: true,
       plugins: {
-        legend: { position: 'top' },
+        legend: {
+          position: 'top',
+          onClick: function(e, legendItem, legend) {
+            const index = legendItem.datasetIndex
+            const ci = legend.chart
+            const meta = ci.getDatasetMeta(index)
+            meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null
+            ci.update()
+          }
+        },
         tooltip: {
           callbacks: {
             label: function(context) {
@@ -645,9 +654,18 @@ const updateCharts = () => {
           }
         }
       },
+      onClick: function(e, elements) {
+        if (elements.length > 0) {
+          const index = elements[0].datasetIndex
+          const meta = this.getDatasetMeta(index)
+          meta.hidden = meta.hidden === null ? !this.data.datasets[index].hidden : null
+          this.update()
+        }
+      },
       scales: {
         y: {
-          title: { display: true, text: '时间（秒）' }
+          title: { display: true, text: '时间（秒）' },
+          reverse: true
         },
         x: {
           title: { display: true, text: '组号' }
