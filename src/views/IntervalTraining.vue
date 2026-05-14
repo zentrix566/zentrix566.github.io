@@ -50,13 +50,42 @@
       <canvas ref="ratingChartRef"></canvas>
     </div>
 
-    <!-- 训练记录列表 -->
-    <div class="sessions-list">
-      <h3>训练记录</h3>
-      <div v-for="session in trainingSessions" :key="session.date" class="session-card">
+    <!-- 训练日历 -->
+    <div class="training-calendar-section">
+      <div class="calendar-header">
+        <h3>训练日历</h3>
+        <div class="calendar-controls">
+          <button @click="changeMonth(-1)" class="calendar-nav-btn" aria-label="上个月">‹</button>
+          <span class="calendar-title">{{ calendarTitle }}</span>
+          <button @click="changeMonth(1)" class="calendar-nav-btn" aria-label="下个月">›</button>
+        </div>
+      </div>
+
+      <div class="calendar-grid">
+        <div v-for="weekday in weekdays" :key="weekday" class="calendar-weekday">
+          {{ weekday }}
+        </div>
+        <button
+          v-for="day in calendarDays"
+          :key="day.key"
+          class="calendar-day"
+          :class="{
+            'is-outside-month': !day.isCurrentMonth,
+            'has-training': day.session,
+            'is-selected': day.key === selectedDateKey
+          }"
+          :disabled="!day.session"
+          @click="selectSession(day.key)"
+        >
+          <span class="calendar-day-number">{{ day.date.getDate() }}</span>
+          <span v-if="day.session" class="calendar-day-meta">{{ day.session.laps.length }}组</span>
+        </button>
+      </div>
+
+      <div v-if="selectedSession" class="session-card selected-session-card">
         <div class="session-header">
-          <span class="session-date">{{ session.date }}</span>
-          <button @click="deleteSession(session.date)" class="btn-delete">删除</button>
+          <span class="session-date">{{ selectedSession.date }}</span>
+          <button @click="deleteSession(selectedSession.date)" class="btn-delete">删除</button>
         </div>
         <table class="data-table">
           <thead>
@@ -68,7 +97,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(lap, index) in session.laps" :key="index" :class="getRatingClass(lap.rating)">
+            <tr v-for="(lap, index) in selectedSession.laps" :key="index" :class="getRatingClass(lap.rating)">
               <td>{{ index + 1 }}</td>
               <td>{{ lap.time }}</td>
               <td>{{ lap.pace }}</td>
@@ -77,6 +106,7 @@
           </tbody>
         </table>
       </div>
+      <div v-else class="empty-session-card">暂无训练记录</div>
     </div>
 
     <!-- 添加训练弹窗 -->
@@ -151,8 +181,11 @@ const showGistModal = ref(false)
 const gistToken = ref(sessionStorage.getItem('gist_token') || '')
 const gistId = ref(localStorage.getItem('gist_id') || '')
 const syncStatus = ref('')
+const selectedDateKey = ref('')
+const calendarCursor = ref(new Date())
 let chartInstance = null
 let ratingChartInstance = null
+const weekdays = ['日', '一', '二', '三', '四', '五', '六']
 
 // 预设初始数据
 const initialData = [
@@ -209,6 +242,85 @@ const newSession = ref({
   date: '',
   lapsText: ''
 })
+
+const padNumber = (value) => String(value).padStart(2, '0')
+
+const formatDateKey = (date) => {
+  return `${date.getFullYear()}-${padNumber(date.getMonth() + 1)}-${padNumber(date.getDate())}`
+}
+
+const parseSessionDate = (dateText) => {
+  const match = String(dateText).match(/(\d{4})[/-](\d{1,2})[/-](\d{1,2})/)
+  if (!match) return null
+  const [, year, month, day] = match
+  return new Date(Number(year), Number(month) - 1, Number(day))
+}
+
+const getSessionDateKey = (session) => {
+  const date = parseSessionDate(session.date)
+  return date ? formatDateKey(date) : session.date
+}
+
+const sessionMap = computed(() => {
+  return new Map(trainingSessions.value.map(session => [getSessionDateKey(session), session]))
+})
+
+const selectedSession = computed(() => {
+  return sessionMap.value.get(selectedDateKey.value)
+})
+
+const calendarTitle = computed(() => {
+  const date = calendarCursor.value
+  return `${date.getFullYear()}年${date.getMonth() + 1}月`
+})
+
+const calendarDays = computed(() => {
+  const cursor = calendarCursor.value
+  const year = cursor.getFullYear()
+  const month = cursor.getMonth()
+  const firstDay = new Date(year, month, 1)
+  const startDate = new Date(year, month, 1 - firstDay.getDay())
+
+  return Array.from({ length: 42 }, (_, index) => {
+    const date = new Date(startDate)
+    date.setDate(startDate.getDate() + index)
+    const key = formatDateKey(date)
+
+    return {
+      key,
+      date,
+      isCurrentMonth: date.getMonth() === month,
+      session: sessionMap.value.get(key)
+    }
+  })
+})
+
+const syncSelectedSession = () => {
+  if (selectedSession.value) return
+
+  const latestSession = trainingSessions.value
+    .map(session => ({ session, date: parseSessionDate(session.date) }))
+    .filter(item => item.date)
+    .sort((a, b) => b.date - a.date)[0]
+
+  if (latestSession) {
+    selectedDateKey.value = getSessionDateKey(latestSession.session)
+    calendarCursor.value = new Date(latestSession.date.getFullYear(), latestSession.date.getMonth(), 1)
+  } else {
+    selectedDateKey.value = ''
+  }
+}
+
+const selectSession = (dateKey) => {
+  if (!sessionMap.value.has(dateKey)) return
+  selectedDateKey.value = dateKey
+}
+
+const changeMonth = (offset) => {
+  const next = new Date(calendarCursor.value)
+  next.setMonth(next.getMonth() + offset)
+  calendarCursor.value = next
+}
 
 // 时间转换：分:秒.毫秒 -> 总秒数
 const timeToSeconds = (timeStr) => {
@@ -327,6 +439,7 @@ const loadFromLocalStorage = () => {
 // 监听数据变化自动保存
 watch(trainingSessions, () => {
   saveToLocalStorage()
+  syncSelectedSession()
 }, { deep: true })
 
 // 校验时间格式
@@ -361,6 +474,11 @@ const addSession = () => {
   })
 
   trainingSessions.value.push(newSessionData)
+  const newDate = parseSessionDate(newSessionData.date)
+  selectedDateKey.value = getSessionDateKey(newSessionData)
+  if (newDate) {
+    calendarCursor.value = new Date(newDate.getFullYear(), newDate.getMonth(), 1)
+  }
 
   // 按日期排序（新的在前）
   trainingSessions.value.sort((a, b) => {
@@ -378,6 +496,7 @@ const addSession = () => {
 const deleteSession = (date) => {
   if (confirm('确定要删除这条训练记录吗？')) {
     trainingSessions.value = trainingSessions.value.filter(s => s.date !== date)
+    syncSelectedSession()
     updateCharts()
   }
 }
@@ -440,6 +559,7 @@ const pullFromGist = async () => {
     if (!fileContent) throw new Error('Gist 中没有 training-data.json 文件')
     const rawData = JSON.parse(fileContent)
     trainingSessions.value = rawData.map(processSessionData)
+    syncSelectedSession()
     syncStatus.value = '✅ 拉取成功！'
     setTimeout(() => { syncStatus.value = '' }, 2000)
   } catch (e) {
@@ -469,6 +589,7 @@ const importData = (event) => {
     try {
       const data = JSON.parse(e.target.result)
       trainingSessions.value = data.map(processSessionData)
+      syncSelectedSession()
       alert('导入成功！')
       updateCharts()
     } catch (err) {
@@ -580,6 +701,7 @@ const updateCharts = () => {
 
 onMounted(() => {
   loadFromLocalStorage()
+  syncSelectedSession()
   // 等待 DOM 更新后再渲染图表
   setTimeout(updateCharts, 100)
 })
@@ -686,17 +808,135 @@ onMounted(() => {
   font-size: 1.125rem;
 }
 
-.sessions-list h3 {
-  margin-bottom: 16px;
-  font-size: 1.25rem;
-}
-
 .session-card {
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 16px;
+}
+
+.training-calendar-section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.calendar-header h3 {
+  font-size: 1.25rem;
+}
+
+.calendar-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.calendar-title {
+  min-width: 90px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.calendar-nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.calendar-nav-btn:hover {
+  background: var(--border);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.calendar-weekday {
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  text-align: center;
+  padding: 4px 0;
+}
+
+.calendar-day {
+  min-height: 72px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 10px;
+  cursor: default;
+  transition: all 0.2s ease;
+}
+
+.calendar-day.is-outside-month {
+  opacity: 0.35;
+}
+
+.calendar-day.has-training {
+  color: var(--text-primary);
+  border-color: rgba(99, 102, 241, 0.55);
+  background: rgba(99, 102, 241, 0.12);
+  cursor: pointer;
+}
+
+.calendar-day.has-training:hover {
+  border-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.calendar-day.is-selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.35);
+}
+
+.calendar-day:disabled {
+  cursor: default;
+}
+
+.calendar-day-number {
+  font-weight: 600;
+}
+
+.calendar-day-meta {
+  color: #c4b5fd;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.selected-session-card {
+  margin-bottom: 0;
+}
+
+.empty-session-card {
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  padding: 32px;
+  color: var(--text-secondary);
+  text-align: center;
 }
 
 .session-header {
@@ -893,6 +1133,20 @@ onMounted(() => {
 @media (max-width: 768px) {
   .stats-overview {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .calendar-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .calendar-grid {
+    gap: 6px;
+  }
+
+  .calendar-day {
+    min-height: 56px;
+    padding: 7px;
   }
 
   .data-table {

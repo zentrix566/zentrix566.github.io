@@ -11,6 +11,19 @@
 </head>
 <body>
     <div id="app"></div>
+    <script>
+        (function () {
+            const params = new URLSearchParams(window.location.search)
+            const redirect = params.get('redirect')
+
+            if (!redirect) return
+
+            const target = decodeURIComponent(redirect)
+            if (target.startsWith('/')) {
+                window.history.replaceState(null, '', target)
+            }
+        })()
+    </script>
     <script type="module" src="/src/main.js"></script>
 </body>
 </html>
