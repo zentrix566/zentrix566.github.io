@@ -233,6 +233,21 @@ const initialData = [
       { time: '02:02.23' },
       { time: '02:01.27' }
     ]
+  },
+  {
+    date: '2026/5/18（周一）',
+    laps: [
+      { time: '01:55.00' },
+      { time: '01:48.54' },
+      { time: '01:56.90' },
+      { time: '01:53.01' },
+      { time: '01:56.05' },
+      { time: '02:01.84' },
+      { time: '01:58.14' },
+      { time: '02:01.98' },
+      { time: '02:00.65' },
+      { time: '02:01.90' }
+    ]
   }
 ]
 
@@ -426,13 +441,13 @@ const loadFromLocalStorage = () => {
   const saved = localStorage.getItem('intervalTrainingData')
   const version = localStorage.getItem('intervalTrainingVersion')
   // 版本号用于强制刷新数据
-  if (saved && version === 'v3') {
+  if (saved && version === 'v4') {
     trainingSessions.value = JSON.parse(saved)
   } else {
     // 使用初始数据
     trainingSessions.value = initialData.map(processSessionData)
     saveToLocalStorage()
-    localStorage.setItem('intervalTrainingVersion', 'v3')
+    localStorage.setItem('intervalTrainingVersion', 'v4')
   }
 }
 
