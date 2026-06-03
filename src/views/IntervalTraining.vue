@@ -118,12 +118,12 @@
           <input v-model="newSession.date" type="date" class="form-input">
         </div>
         <div class="form-group">
-          <label>每组时间（每行一组，格式：分:秒.毫秒）</label>
+          <label>每组时间（每行一组，可附配速：01:56.90 4分52）</label>
           <textarea
             v-model="newSession.lapsText"
             class="form-textarea"
             rows="10"
-            placeholder="02:03.55&#10;01:55.80&#10;01:56.84&#10;...">
+            placeholder="01:56.90 4分52&#10;01:59.10 4分58&#10;02:00.92 5分02&#10;...">
           </textarea>
         </div>
         <div class="modal-actions">
@@ -248,9 +248,25 @@ const initialData = [
       { time: '02:00.65' },
       { time: '02:01.90' }
     ]
+  },
+  {
+    date: '2026/6/3（周三）',
+    laps: [
+      { time: '01:56.90', pace: '4分52秒' },
+      { time: '01:59.10', pace: '4分58秒' },
+      { time: '02:00.92', pace: '5分02秒' },
+      { time: '01:58.48', pace: '4分56秒' },
+      { time: '01:59.21', pace: '4分58秒' },
+      { time: '01:45.77', pace: '4分24秒' },
+      { time: '02:06.34', pace: '5分16秒' },
+      { time: '02:01.08', pace: '5分03秒' },
+      { time: '02:01.03', pace: '5分03秒' },
+      { time: '01:59.49', pace: '4分59秒' }
+    ]
   }
 ]
 
+const DATA_VERSION = 'v5'
 const trainingSessions = ref([])
 
 const newSession = ref({
@@ -274,6 +290,28 @@ const parseSessionDate = (dateText) => {
 const getSessionDateKey = (session) => {
   const date = parseSessionDate(session.date)
   return date ? formatDateKey(date) : session.date
+}
+
+const sortSessionsByDateDesc = (sessions) => {
+  return sessions.sort((a, b) => {
+    const dateA = parseSessionDate(a.date)
+    const dateB = parseSessionDate(b.date)
+    if (!dateA || !dateB) return 0
+    return dateB - dateA
+  })
+}
+
+const mergeInitialSessions = (sessions) => {
+  const processedSessions = sessions.map(processSessionData)
+  const existingKeys = new Set(processedSessions.map(getSessionDateKey))
+
+  initialData.map(processSessionData).forEach(session => {
+    if (!existingKeys.has(getSessionDateKey(session))) {
+      processedSessions.push(session)
+    }
+  })
+
+  return sortSessionsByDateDesc(processedSessions)
 }
 
 const sessionMap = computed(() => {
@@ -396,7 +434,7 @@ const processSessionData = (session) => {
       return {
         ...lap,
         seconds: seconds,
-        pace: secondsToPace(seconds),
+        pace: lap.pace || secondsToPace(seconds),
         rating: getRating(seconds)
       }
     })
@@ -441,13 +479,17 @@ const loadFromLocalStorage = () => {
   const saved = localStorage.getItem('intervalTrainingData')
   const version = localStorage.getItem('intervalTrainingVersion')
   // 版本号用于强制刷新数据
-  if (saved && version === 'v4') {
-    trainingSessions.value = JSON.parse(saved)
+  if (saved && version === DATA_VERSION) {
+    trainingSessions.value = mergeInitialSessions(JSON.parse(saved))
+  } else if (saved) {
+    trainingSessions.value = mergeInitialSessions(JSON.parse(saved))
+    saveToLocalStorage()
+    localStorage.setItem('intervalTrainingVersion', DATA_VERSION)
   } else {
     // 使用初始数据
-    trainingSessions.value = initialData.map(processSessionData)
+    trainingSessions.value = mergeInitialSessions(initialData)
     saveToLocalStorage()
-    localStorage.setItem('intervalTrainingVersion', 'v4')
+    localStorage.setItem('intervalTrainingVersion', DATA_VERSION)
   }
 }
 
@@ -457,10 +499,14 @@ watch(trainingSessions, () => {
   syncSelectedSession()
 }, { deep: true })
 
-// 校验时间格式
-const validateTimeFormat = (timeStr) => {
-  const regex = /^\d{2}:\d{2}\.\d{2}$/
-  return regex.test(timeStr)
+const parseLapLine = (line) => {
+  const match = line.match(/^(\d{2}:\d{2}\.\d{2})(?:\s+(\d+分\d{1,2}(?:秒)?))?$/)
+  if (!match) return null
+
+  return {
+    time: match[1],
+    ...(match[2] ? { pace: match[2].endsWith('秒') ? match[2] : `${match[2]}秒` } : {})
+  }
 }
 
 // 添加训练记录
@@ -475,17 +521,16 @@ const addSession = () => {
     .map(line => line.trim())
     .filter(line => line)
 
-  const invalidLines = lines.filter(line => !validateTimeFormat(line))
+  const parsedLaps = lines.map(parseLapLine)
+  const invalidLines = lines.filter((line, index) => !parsedLaps[index])
   if (invalidLines.length > 0) {
-    alert(`格式错误：${invalidLines.slice(0, 3).join(', ')}${invalidLines.length > 3 ? ' 等' : ''}\n正确格式：02:03.55`)
+    alert(`格式错误：${invalidLines.slice(0, 3).join(', ')}${invalidLines.length > 3 ? ' 等' : ''}\n正确格式：02:03.55 或 02:03.55 5分08`)
     return
   }
 
-  const laps = lines.map(time => ({ time }))
-
   const newSessionData = processSessionData({
     date: newSession.value.date,
-    laps
+    laps: parsedLaps
   })
 
   trainingSessions.value.push(newSessionData)
