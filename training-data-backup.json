@@ -4,62 +4,82 @@
     "laps": [
       {
         "time": "02:03.55",
+        "durationSeconds": 123.55,
         "seconds": 123.55,
-        "pace": "2分3秒",
+        "paceSeconds": 308.875,
+        "pace": "5分09秒",
         "rating": "一般"
       },
       {
         "time": "01:55.80",
+        "durationSeconds": 115.8,
         "seconds": 115.8,
-        "pace": "1分55秒",
+        "paceSeconds": 289.5,
+        "pace": "4分50秒",
         "rating": "有点快"
       },
       {
         "time": "01:56.84",
+        "durationSeconds": 116.84,
         "seconds": 116.84,
-        "pace": "1分56秒",
+        "paceSeconds": 292.09999999999997,
+        "pace": "4分52秒",
         "rating": "有点快"
       },
       {
         "time": "02:00.85",
+        "durationSeconds": 120.85,
         "seconds": 120.85,
-        "pace": "2分0秒",
+        "paceSeconds": 302.12499999999994,
+        "pace": "5分02秒",
         "rating": "优秀"
       },
       {
         "time": "01:50.85",
+        "durationSeconds": 110.85,
         "seconds": 110.85,
-        "pace": "1分50秒",
+        "paceSeconds": 277.12499999999994,
+        "pace": "4分37秒",
         "rating": "比较快"
       },
       {
         "time": "02:09.51",
+        "durationSeconds": 129.51,
         "seconds": 129.51,
-        "pace": "2分9秒",
+        "paceSeconds": 323.775,
+        "pace": "5分24秒",
         "rating": "差"
       },
       {
         "time": "02:02.23",
+        "durationSeconds": 122.23,
         "seconds": 122.23,
-        "pace": "2分2秒",
+        "paceSeconds": 305.575,
+        "pace": "5分06秒",
         "rating": "良"
       },
       {
         "time": "02:00.80",
+        "durationSeconds": 120.8,
         "seconds": 120.8,
-        "pace": "2分0秒",
+        "paceSeconds": 302,
+        "pace": "5分02秒",
         "rating": "优秀"
       },
       {
         "time": "01:57.33",
+        "durationSeconds": 117.33,
         "seconds": 117.33,
-        "pace": "1分57秒",
+        "paceSeconds": 293.325,
+        "pace": "4分53秒",
         "rating": "良"
       },
       {
         "time": "01:57.68",
+        "durationSeconds": 117.68,
         "seconds": 117.68,
-        "pace": "1分57秒",
+        "paceSeconds": 294.2,
+        "pace": "4分54秒",
         "rating": "良"
       }
     ]
@@ -69,62 +89,82 @@
     "laps": [
       {
         "time": "02:00.39",
+        "durationSeconds": 120.39,
         "seconds": 120.39,
-        "pace": "2分0秒",
+        "paceSeconds": 300.97499999999997,
+        "pace": "5分01秒",
         "rating": "优秀"
       },
       {
         "time": "01:53.95",
+        "durationSeconds": 113.95,
         "seconds": 113.95,
-        "pace": "1分53秒",
+        "paceSeconds": 284.875,
+        "pace": "4分45秒",
         "rating": "比较快"
       },
       {
         "time": "02:01.16",
+        "durationSeconds": 121.16,
         "seconds": 121.16,
-        "pace": "2分1秒",
-        "rating": "优秀"
+        "paceSeconds": 302.9,
+        "pace": "5分03秒",
+        "rating": "良"
       },
       {
         "time": "01:59.21",
+        "durationSeconds": 119.21,
         "seconds": 119.21,
-        "pace": "1分59秒",
+        "paceSeconds": 298.025,
+        "pace": "4分58秒",
         "rating": "优秀"
       },
       {
         "time": "02:05.00",
+        "durationSeconds": 125,
         "seconds": 125,
-        "pace": "2分5秒",
+        "paceSeconds": 312.5,
+        "pace": "5分13秒",
         "rating": "一般"
       },
       {
         "time": "01:55.45",
+        "durationSeconds": 115.45,
         "seconds": 115.45,
-        "pace": "1分55秒",
+        "paceSeconds": 288.625,
+        "pace": "4分49秒",
         "rating": "有点快"
       },
       {
         "time": "02:07.38",
+        "durationSeconds": 127.38,
         "seconds": 127.38,
-        "pace": "2分7秒",
+        "paceSeconds": 318.45,
+        "pace": "5分18秒",
         "rating": "差"
       },
       {
         "time": "02:00.39",
+        "durationSeconds": 120.39,
         "seconds": 120.39,
-        "pace": "2分0秒",
+        "paceSeconds": 300.97499999999997,
+        "pace": "5分01秒",
         "rating": "优秀"
       },
       {
         "time": "02:05.80",
+        "durationSeconds": 125.8,
         "seconds": 125.8,
-        "pace": "2分5秒",
+        "paceSeconds": 314.5,
+        "pace": "5分15秒",
         "rating": "差"
       },
       {
         "time": "01:49.29",
+        "durationSeconds": 109.29,
         "seconds": 109.29,
-        "pace": "1分49秒",
+        "paceSeconds": 273.225,
+        "pace": "4分33秒",
         "rating": "非常快"
       }
     ]
@@ -134,63 +174,83 @@
     "laps": [
       {
         "time": "02:03.31",
+        "durationSeconds": 123.31,
         "seconds": 123.31,
-        "pace": "2分3秒",
+        "paceSeconds": 308.275,
+        "pace": "5分08秒",
         "rating": "一般"
       },
       {
         "time": "02:00.08",
+        "durationSeconds": 120.08,
         "seconds": 120.08,
-        "pace": "2分0秒",
+        "paceSeconds": 300.2,
+        "pace": "5分00秒",
         "rating": "优秀"
       },
       {
         "time": "02:05.35",
+        "durationSeconds": 125.35,
         "seconds": 125.35,
-        "pace": "2分5秒",
+        "paceSeconds": 313.37499999999994,
+        "pace": "5分13秒",
         "rating": "差"
       },
       {
         "time": "02:00.69",
+        "durationSeconds": 120.69,
         "seconds": 120.69,
-        "pace": "2分0秒",
+        "paceSeconds": 301.72499999999997,
+        "pace": "5分02秒",
         "rating": "优秀"
       },
       {
         "time": "02:06.59",
+        "durationSeconds": 126.59,
         "seconds": 126.59,
-        "pace": "2分6秒",
+        "paceSeconds": 316.47499999999997,
+        "pace": "5分16秒",
         "rating": "差"
       },
       {
         "time": "02:02.99",
+        "durationSeconds": 122.99,
         "seconds": 122.99,
-        "pace": "2分2秒",
+        "paceSeconds": 307.47499999999997,
+        "pace": "5分07秒",
         "rating": "良"
       },
       {
         "time": "02:03.20",
+        "durationSeconds": 123.2,
         "seconds": 123.2,
-        "pace": "2分3秒",
+        "paceSeconds": 308,
+        "pace": "5分08秒",
         "rating": "一般"
       },
       {
         "time": "01:59.68",
+        "durationSeconds": 119.68,
         "seconds": 119.68,
-        "pace": "1分59秒",
+        "paceSeconds": 299.2,
+        "pace": "4分59秒",
         "rating": "优秀"
       },
       {
         "time": "02:02.23",
+        "durationSeconds": 122.23,
         "seconds": 122.23,
-        "pace": "2分2秒",
+        "paceSeconds": 305.575,
+        "pace": "5分06秒",
         "rating": "良"
       },
       {
         "time": "02:01.27",
+        "durationSeconds": 121.27,
         "seconds": 121.27,
-        "pace": "2分1秒",
-        "rating": "优秀"
+        "paceSeconds": 303.17499999999995,
+        "pace": "5分03秒",
+        "rating": "良"
       }
     ]
   },
@@ -199,63 +259,83 @@
     "laps": [
       {
         "time": "01:55.00",
-        "seconds": 115.00,
+        "durationSeconds": 115,
+        "seconds": 115,
+        "paceSeconds": 288,
         "pace": "4分48秒",
-        "rating": "优秀"
+        "rating": "有点快"
       },
       {
         "time": "01:48.54",
+        "durationSeconds": 108.54,
         "seconds": 108.54,
+        "paceSeconds": 271,
         "pace": "4分31秒",
         "rating": "非常快"
       },
       {
         "time": "01:56.90",
-        "seconds": 116.90,
+        "durationSeconds": 116.9,
+        "seconds": 116.9,
+        "paceSeconds": 292,
         "pace": "4分52秒",
-        "rating": "优秀"
+        "rating": "有点快"
       },
       {
         "time": "01:53.01",
+        "durationSeconds": 113.01,
         "seconds": 113.01,
+        "paceSeconds": 283,
         "pace": "4分43秒",
-        "rating": "优秀"
+        "rating": "比较快"
       },
       {
         "time": "01:56.05",
+        "durationSeconds": 116.05,
         "seconds": 116.05,
+        "paceSeconds": 290,
         "pace": "4分50秒",
-        "rating": "优秀"
+        "rating": "有点快"
       },
       {
         "time": "02:01.84",
+        "durationSeconds": 121.84,
         "seconds": 121.84,
+        "paceSeconds": 305,
         "pace": "5分05秒",
-        "rating": "一般"
+        "rating": "良"
       },
       {
         "time": "01:58.14",
+        "durationSeconds": 118.14,
         "seconds": 118.14,
+        "paceSeconds": 295,
         "pace": "4分55秒",
         "rating": "良"
       },
       {
         "time": "02:01.98",
+        "durationSeconds": 121.98,
         "seconds": 121.98,
+        "paceSeconds": 305,
         "pace": "5分05秒",
-        "rating": "一般"
+        "rating": "良"
       },
       {
         "time": "02:00.65",
+        "durationSeconds": 120.65,
         "seconds": 120.65,
+        "paceSeconds": 302,
         "pace": "5分02秒",
         "rating": "优秀"
       },
       {
         "time": "02:01.90",
-        "seconds": 121.90,
+        "durationSeconds": 121.9,
+        "seconds": 121.9,
+        "paceSeconds": 305,
         "pace": "5分05秒",
-        "rating": "一般"
+        "rating": "良"
       }
     ]
   },
@@ -264,61 +344,81 @@
     "laps": [
       {
         "time": "01:56.90",
+        "durationSeconds": 116.9,
         "seconds": 116.9,
+        "paceSeconds": 292,
         "pace": "4分52秒",
         "rating": "有点快"
       },
       {
         "time": "01:59.10",
+        "durationSeconds": 119.1,
         "seconds": 119.1,
+        "paceSeconds": 298,
         "pace": "4分58秒",
         "rating": "优秀"
       },
       {
         "time": "02:00.92",
+        "durationSeconds": 120.92,
         "seconds": 120.92,
+        "paceSeconds": 302,
         "pace": "5分02秒",
         "rating": "优秀"
       },
       {
         "time": "01:58.48",
+        "durationSeconds": 118.48,
         "seconds": 118.48,
+        "paceSeconds": 296,
         "pace": "4分56秒",
         "rating": "良"
       },
       {
         "time": "01:59.21",
+        "durationSeconds": 119.21,
         "seconds": 119.21,
+        "paceSeconds": 298,
         "pace": "4分58秒",
         "rating": "优秀"
       },
       {
         "time": "01:45.77",
+        "durationSeconds": 105.77,
         "seconds": 105.77,
+        "paceSeconds": 264,
         "pace": "4分24秒",
         "rating": "非常快"
       },
       {
         "time": "02:06.34",
+        "durationSeconds": 126.34,
         "seconds": 126.34,
+        "paceSeconds": 316,
         "pace": "5分16秒",
         "rating": "差"
       },
       {
         "time": "02:01.08",
+        "durationSeconds": 121.08,
         "seconds": 121.08,
+        "paceSeconds": 303,
         "pace": "5分03秒",
         "rating": "良"
       },
       {
         "time": "02:01.03",
+        "durationSeconds": 121.03,
         "seconds": 121.03,
+        "paceSeconds": 303,
         "pace": "5分03秒",
         "rating": "良"
       },
       {
         "time": "01:59.49",
+        "durationSeconds": 119.49,
         "seconds": 119.49,
+        "paceSeconds": 299,
         "pace": "4分59秒",
         "rating": "优秀"
       }

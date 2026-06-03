@@ -171,7 +171,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue'
 import Chart from 'chart.js/auto'
 
 const chartRef = ref(null)
@@ -266,7 +266,9 @@ const initialData = [
   }
 ]
 
-const DATA_VERSION = 'v5'
+const DATA_VERSION = 'v6'
+const PREVIOUS_DATA_VERSION = 'v5'
+const INTERVAL_DISTANCE_KM = 0.4
 const trainingSessions = ref([])
 
 const newSession = ref({
@@ -301,15 +303,15 @@ const sortSessionsByDateDesc = (sessions) => {
   })
 }
 
-const mergeInitialSessions = (sessions) => {
-  const processedSessions = sessions.map(processSessionData)
+const addJuneThirdSession = (sessions) => {
+  const processedSessions = normalizeSessions(sessions)
   const existingKeys = new Set(processedSessions.map(getSessionDateKey))
+  const juneThirdSession = normalizeSessions(initialData)
+    .find(session => getSessionDateKey(session) === '2026-06-03')
 
-  initialData.map(processSessionData).forEach(session => {
-    if (!existingKeys.has(getSessionDateKey(session))) {
-      processedSessions.push(session)
-    }
-  })
+  if (juneThirdSession && !existingKeys.has(getSessionDateKey(juneThirdSession))) {
+    processedSessions.push(juneThirdSession)
+  }
 
   return sortSessionsByDateDesc(processedSessions)
 }
@@ -383,11 +385,27 @@ const timeToSeconds = (timeStr) => {
   return minutes * 60 + seconds
 }
 
+const paceToSeconds = (paceText) => {
+  const match = String(paceText || '').match(/(\d+)分(\d{1,2})(?:秒)?/)
+  if (!match) return null
+  return Number(match[1]) * 60 + Number(match[2])
+}
+
 // 总秒数 -> 配速格式（X分Y秒）
 const secondsToPace = (seconds) => {
-  const mins = Math.floor(seconds / 60)
-  const secs = Math.floor(seconds % 60)
+  const roundedSeconds = Math.round(seconds)
+  const mins = Math.floor(roundedSeconds / 60)
+  const secs = padNumber(roundedSeconds % 60)
   return `${mins}分${secs}秒`
+}
+
+const getPaceSeconds = (lap, durationSeconds) => {
+  if (lap.paceSeconds) return Number(lap.paceSeconds)
+
+  const parsedPaceSeconds = paceToSeconds(lap.pace)
+  if (parsedPaceSeconds && parsedPaceSeconds > 180) return parsedPaceSeconds
+
+  return durationSeconds / INTERVAL_DISTANCE_KM
 }
 
 // 评级函数
@@ -430,15 +448,23 @@ const processSessionData = (session) => {
   return {
     ...session,
     laps: session.laps.map(lap => {
-      const seconds = timeToSeconds(lap.time)
+      const durationSeconds = Number(lap.durationSeconds ?? lap.seconds ?? timeToSeconds(lap.time))
+      const paceSeconds = getPaceSeconds(lap, durationSeconds)
       return {
         ...lap,
-        seconds: seconds,
-        pace: lap.pace || secondsToPace(seconds),
-        rating: getRating(seconds)
+        time: lap.time,
+        durationSeconds,
+        seconds: durationSeconds,
+        paceSeconds,
+        pace: secondsToPace(paceSeconds),
+        rating: getRating(durationSeconds)
       }
     })
   }
+}
+
+const normalizeSessions = (sessions) => {
+  return sortSessionsByDateDesc(sessions.map(processSessionData))
 }
 
 // 计算统计数据
@@ -451,7 +477,7 @@ const avgPace = computed(() => {
   let count = 0
   trainingSessions.value.forEach(session => {
     session.laps.forEach(lap => {
-      totalSeconds += lap.seconds
+      totalSeconds += lap.paceSeconds
       count++
     })
   })
@@ -478,16 +504,26 @@ const saveToLocalStorage = () => {
 const loadFromLocalStorage = () => {
   const saved = localStorage.getItem('intervalTrainingData')
   const version = localStorage.getItem('intervalTrainingVersion')
-  // 版本号用于强制刷新数据
-  if (saved && version === DATA_VERSION) {
-    trainingSessions.value = mergeInitialSessions(JSON.parse(saved))
-  } else if (saved) {
-    trainingSessions.value = mergeInitialSessions(JSON.parse(saved))
-    saveToLocalStorage()
-    localStorage.setItem('intervalTrainingVersion', DATA_VERSION)
-  } else {
-    // 使用初始数据
-    trainingSessions.value = mergeInitialSessions(initialData)
+
+  try {
+    if (saved && version === DATA_VERSION) {
+      trainingSessions.value = normalizeSessions(JSON.parse(saved))
+    } else if (saved) {
+      const savedSessions = JSON.parse(saved)
+      trainingSessions.value = version === PREVIOUS_DATA_VERSION
+        ? normalizeSessions(savedSessions)
+        : addJuneThirdSession(savedSessions)
+      saveToLocalStorage()
+      localStorage.setItem('intervalTrainingVersion', DATA_VERSION)
+    } else {
+      // 使用初始数据
+      trainingSessions.value = normalizeSessions(initialData)
+      saveToLocalStorage()
+      localStorage.setItem('intervalTrainingVersion', DATA_VERSION)
+    }
+  } catch (error) {
+    alert('本地训练数据读取失败，已使用初始数据恢复')
+    trainingSessions.value = normalizeSessions(initialData)
     saveToLocalStorage()
     localStorage.setItem('intervalTrainingVersion', DATA_VERSION)
   }
@@ -541,9 +577,7 @@ const addSession = () => {
   }
 
   // 按日期排序（新的在前）
-  trainingSessions.value.sort((a, b) => {
-    return new Date(b.date.split('（')[0]) - new Date(a.date.split('（')[0])
-  })
+  sortSessionsByDateDesc(trainingSessions.value)
 
   showAddModal.value = false
   newSession.value = { date: '', lapsText: '' }
@@ -618,8 +652,9 @@ const pullFromGist = async () => {
     const fileContent = data.files['training-data.json']?.content
     if (!fileContent) throw new Error('Gist 中没有 training-data.json 文件')
     const rawData = JSON.parse(fileContent)
-    trainingSessions.value = rawData.map(processSessionData)
+    trainingSessions.value = normalizeSessions(rawData)
     syncSelectedSession()
+    updateCharts()
     syncStatus.value = '✅ 拉取成功！'
     setTimeout(() => { syncStatus.value = '' }, 2000)
   } catch (e) {
@@ -648,7 +683,7 @@ const importData = (event) => {
   reader.onload = (e) => {
     try {
       const data = JSON.parse(e.target.result)
-      trainingSessions.value = data.map(processSessionData)
+      trainingSessions.value = normalizeSessions(data)
       syncSelectedSession()
       alert('导入成功！')
       updateCharts()
@@ -672,7 +707,7 @@ const updateCharts = () => {
   const colors = ['#6366f1', '#8b5cf6', '#ec4899', '#10b981', '#f59e0b']
   const datasets = trainingSessions.value.map((session, idx) => ({
     label: session.date.split('（')[0],
-    data: session.laps.map(lap => lap.seconds),
+    data: session.laps.map(lap => lap.paceSeconds),
     borderColor: colors[idx % colors.length],
     backgroundColor: colors[idx % colors.length] + '20',
     tension: 0.3,
@@ -681,7 +716,9 @@ const updateCharts = () => {
   }))
 
   // 每组作为X轴标签
-  const maxLaps = Math.max(...trainingSessions.value.map(s => s.laps.length))
+  const maxLaps = trainingSessions.value.length
+    ? Math.max(...trainingSessions.value.map(s => s.laps.length))
+    : 0
   const xLabels = Array.from({ length: maxLaps }, (_, i) => `第${i + 1}组`)
 
   chartInstance = new Chart(chartRef.value, {
@@ -707,9 +744,7 @@ const updateCharts = () => {
           callbacks: {
             label: function(context) {
               const seconds = context.raw
-              const mins = Math.floor(seconds / 60)
-              const secs = Math.floor(seconds % 60)
-              return `${context.dataset.label}: ${mins}分${secs}秒`
+              return `${context.dataset.label}: ${secondsToPace(seconds)}/km`
             }
           }
         }
@@ -724,7 +759,7 @@ const updateCharts = () => {
       },
       scales: {
         y: {
-          title: { display: true, text: '时间（秒）' },
+          title: { display: true, text: '配速（秒/公里）' },
           reverse: true
         },
         x: {
@@ -782,6 +817,11 @@ onMounted(() => {
   syncSelectedSession()
   // 等待 DOM 更新后再渲染图表
   setTimeout(updateCharts, 100)
+})
+
+onBeforeUnmount(() => {
+  if (chartInstance) chartInstance.destroy()
+  if (ratingChartInstance) ratingChartInstance.destroy()
 })
 </script>
 
