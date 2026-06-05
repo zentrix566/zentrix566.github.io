@@ -263,11 +263,26 @@ const initialData = [
       { time: '02:01.03', pace: '5分03秒' },
       { time: '01:59.49', pace: '4分59秒' }
     ]
+  },
+  {
+    date: '2026/6/5（周五）',
+    laps: [
+      { time: '01:53.14', pace: '4分43秒' },
+      { time: '01:53.50', pace: '4分44秒' },
+      { time: '01:54.87', pace: '4分47秒' },
+      { time: '01:56.75', pace: '4分52秒' },
+      { time: '01:51.09', pace: '4分38秒' },
+      { time: '01:51.52', pace: '4分39秒' },
+      { time: '01:54.36', pace: '4分46秒' },
+      { time: '01:57.87', pace: '4分55秒' },
+      { time: '01:54.54', pace: '4分46秒' },
+      { time: '01:36.14', pace: '4分00秒' }
+    ]
   }
 ]
 
-const DATA_VERSION = 'v6'
-const PREVIOUS_DATA_VERSION = 'v5'
+const DATA_VERSION = 'v7'
+const PREVIOUS_DATA_VERSION = 'v6'
 const INTERVAL_DISTANCE_KM = 0.4
 const trainingSessions = ref([])
 
@@ -303,15 +318,15 @@ const sortSessionsByDateDesc = (sessions) => {
   })
 }
 
-const addJuneThirdSession = (sessions) => {
+const addMissingInitialSessions = (sessions) => {
   const processedSessions = normalizeSessions(sessions)
   const existingKeys = new Set(processedSessions.map(getSessionDateKey))
-  const juneThirdSession = normalizeSessions(initialData)
-    .find(session => getSessionDateKey(session) === '2026-06-03')
 
-  if (juneThirdSession && !existingKeys.has(getSessionDateKey(juneThirdSession))) {
-    processedSessions.push(juneThirdSession)
-  }
+  normalizeSessions(initialData).forEach(session => {
+    if (!existingKeys.has(getSessionDateKey(session))) {
+      processedSessions.push(session)
+    }
+  })
 
   return sortSessionsByDateDesc(processedSessions)
 }
@@ -512,7 +527,7 @@ const loadFromLocalStorage = () => {
       const savedSessions = JSON.parse(saved)
       trainingSessions.value = version === PREVIOUS_DATA_VERSION
         ? normalizeSessions(savedSessions)
-        : addJuneThirdSession(savedSessions)
+        : addMissingInitialSessions(savedSessions)
       saveToLocalStorage()
       localStorage.setItem('intervalTrainingVersion', DATA_VERSION)
     } else {
