@@ -41,7 +41,28 @@
 
     <!-- 图表区域 -->
     <div class="chart-container">
-      <h3>配速趋势图</h3>
+      <div class="chart-header">
+        <h3>配速趋势图</h3>
+        <div class="chart-actions">
+          <button @click="selectLatestChartSession" class="chart-action-btn">最新</button>
+          <button @click="selectAllChartSessions" class="chart-action-btn">全选</button>
+        </div>
+      </div>
+      <div class="chart-date-options" aria-label="选择趋势图日期">
+        <label
+          v-for="option in chartDateOptions"
+          :key="option.key"
+          class="chart-date-option"
+          :class="{ 'is-active': chartSelectedDateKeys.includes(option.key) }"
+        >
+          <input
+            type="checkbox"
+            :checked="chartSelectedDateKeys.includes(option.key)"
+            @change="toggleChartSession(option.key)"
+          >
+          <span>{{ option.label }}</span>
+        </label>
+      </div>
       <canvas ref="chartRef"></canvas>
     </div>
 
@@ -182,6 +203,7 @@ const gistToken = ref(sessionStorage.getItem('gist_token') || '')
 const gistId = ref(localStorage.getItem('gist_id') || '')
 const syncStatus = ref('')
 const selectedDateKey = ref('')
+const chartSelectedDateKeys = ref([])
 const calendarCursor = ref(new Date())
 let chartInstance = null
 let ratingChartInstance = null
@@ -278,11 +300,26 @@ const initialData = [
       { time: '01:54.54', pace: '4分46秒' },
       { time: '01:36.14', pace: '4分00秒' }
     ]
+  },
+  {
+    date: '2026/6/10（周三）',
+    laps: [
+      { time: '02:00.33', pace: '5分01秒' },
+      { time: '01:56.09', pace: '4分50秒' },
+      { time: '01:57.07', pace: '4分53秒' },
+      { time: '01:55.61', pace: '4分46秒' },
+      { time: '01:50.64', pace: '4分37秒' },
+      { time: '01:52.88', pace: '4分42秒' },
+      { time: '01:52.42', pace: '4分41秒' },
+      { time: '01:54.95', pace: '4分47秒' },
+      { time: '01:49.29', pace: '4分33秒' },
+      { time: '01:52.16', pace: '4分40秒' }
+    ]
   }
 ]
 
-const DATA_VERSION = 'v7'
-const PREVIOUS_DATA_VERSION = 'v6'
+const DATA_VERSION = 'v8'
+const PREVIOUS_DATA_VERSION = 'v7'
 const INTERVAL_DISTANCE_KM = 0.4
 const trainingSessions = ref([])
 
@@ -339,6 +376,18 @@ const selectedSession = computed(() => {
   return sessionMap.value.get(selectedDateKey.value)
 })
 
+const chartDateOptions = computed(() => {
+  return trainingSessions.value.map(session => ({
+    key: getSessionDateKey(session),
+    label: session.date.split('（')[0]
+  }))
+})
+
+const chartSelectedSessions = computed(() => {
+  const selectedKeys = new Set(chartSelectedDateKeys.value)
+  return trainingSessions.value.filter(session => selectedKeys.has(getSessionDateKey(session)))
+})
+
 const calendarTitle = computed(() => {
   const date = calendarCursor.value
   return `${date.getFullYear()}年${date.getMonth() + 1}月`
@@ -378,6 +427,35 @@ const syncSelectedSession = () => {
     calendarCursor.value = new Date(latestSession.date.getFullYear(), latestSession.date.getMonth(), 1)
   } else {
     selectedDateKey.value = ''
+  }
+}
+
+const syncChartSelection = () => {
+  const availableKeys = new Set(trainingSessions.value.map(getSessionDateKey))
+  chartSelectedDateKeys.value = chartSelectedDateKeys.value.filter(key => availableKeys.has(key))
+
+  if (chartSelectedDateKeys.value.length === 0 && trainingSessions.value.length > 0) {
+    chartSelectedDateKeys.value = [getSessionDateKey(trainingSessions.value[0])]
+  }
+}
+
+const selectLatestChartSession = () => {
+  if (trainingSessions.value.length === 0) {
+    chartSelectedDateKeys.value = []
+    return
+  }
+  chartSelectedDateKeys.value = [getSessionDateKey(trainingSessions.value[0])]
+}
+
+const selectAllChartSessions = () => {
+  chartSelectedDateKeys.value = trainingSessions.value.map(getSessionDateKey)
+}
+
+const toggleChartSession = (dateKey) => {
+  if (chartSelectedDateKeys.value.includes(dateKey)) {
+    chartSelectedDateKeys.value = chartSelectedDateKeys.value.filter(key => key !== dateKey)
+  } else {
+    chartSelectedDateKeys.value = [...chartSelectedDateKeys.value, dateKey]
   }
 }
 
@@ -548,7 +626,12 @@ const loadFromLocalStorage = () => {
 watch(trainingSessions, () => {
   saveToLocalStorage()
   syncSelectedSession()
+  syncChartSelection()
 }, { deep: true })
+
+watch(chartSelectedDateKeys, () => {
+  updateCharts()
+})
 
 const parseLapLine = (line) => {
   const match = line.match(/^(\d{2}:\d{2}\.\d{2})(?:\s+(\d+分\d{1,2}(?:秒)?))?$/)
@@ -587,6 +670,7 @@ const addSession = () => {
   trainingSessions.value.push(newSessionData)
   const newDate = parseSessionDate(newSessionData.date)
   selectedDateKey.value = getSessionDateKey(newSessionData)
+  chartSelectedDateKeys.value = [getSessionDateKey(newSessionData)]
   if (newDate) {
     calendarCursor.value = new Date(newDate.getFullYear(), newDate.getMonth(), 1)
   }
@@ -606,6 +690,7 @@ const deleteSession = (date) => {
   if (confirm('确定要删除这条训练记录吗？')) {
     trainingSessions.value = trainingSessions.value.filter(s => s.date !== date)
     syncSelectedSession()
+    syncChartSelection()
     updateCharts()
   }
 }
@@ -669,6 +754,7 @@ const pullFromGist = async () => {
     const rawData = JSON.parse(fileContent)
     trainingSessions.value = normalizeSessions(rawData)
     syncSelectedSession()
+    syncChartSelection()
     updateCharts()
     syncStatus.value = '✅ 拉取成功！'
     setTimeout(() => { syncStatus.value = '' }, 2000)
@@ -700,6 +786,7 @@ const importData = (event) => {
       const data = JSON.parse(e.target.result)
       trainingSessions.value = normalizeSessions(data)
       syncSelectedSession()
+      syncChartSelection()
       alert('导入成功！')
       updateCharts()
     } catch (err) {
@@ -718,11 +805,12 @@ const updateCharts = () => {
   if (chartInstance) chartInstance.destroy()
   if (ratingChartInstance) ratingChartInstance.destroy()
 
-  // 配速趋势图 - 按训练分组显示
+  // 配速趋势图 - 按选择的训练日期显示
   const colors = ['#6366f1', '#8b5cf6', '#ec4899', '#10b981', '#f59e0b']
-  const datasets = trainingSessions.value.map((session, idx) => ({
+  const trendSessions = chartSelectedSessions.value
+  const datasets = trendSessions.map((session, idx) => ({
     label: session.date.split('（')[0],
-    data: session.laps.map(lap => lap.paceSeconds),
+    data: session.laps.map(lap => Number((lap.paceSeconds / 60).toFixed(2))),
     borderColor: colors[idx % colors.length],
     backgroundColor: colors[idx % colors.length] + '20',
     tension: 0.3,
@@ -731,8 +819,8 @@ const updateCharts = () => {
   }))
 
   // 每组作为X轴标签
-  const maxLaps = trainingSessions.value.length
-    ? Math.max(...trainingSessions.value.map(s => s.laps.length))
+  const maxLaps = trendSessions.length
+    ? Math.max(...trendSessions.map(s => s.laps.length))
     : 0
   const xLabels = Array.from({ length: maxLaps }, (_, i) => `第${i + 1}组`)
 
@@ -747,38 +835,42 @@ const updateCharts = () => {
       plugins: {
         legend: {
           position: 'top',
-          onClick: function(e, legendItem, legend) {
-            const index = legendItem.datasetIndex
-            const ci = legend.chart
-            const meta = ci.getDatasetMeta(index)
-            meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null
-            ci.update()
-          }
+          onClick: () => {}
         },
         tooltip: {
           callbacks: {
             label: function(context) {
-              const seconds = context.raw
+              const seconds = context.raw * 60
               return `${context.dataset.label}: ${secondsToPace(seconds)}/km`
+            },
+            title: function(context) {
+              const rawValue = context[0]?.raw
+              return rawValue ? `${context[0].label} · ${rawValue.toFixed(2)} 分/km` : context[0]?.label
             }
           }
         }
       },
-      onClick: function(e, elements) {
-        if (elements.length > 0) {
-          const index = elements[0].datasetIndex
-          const meta = this.getDatasetMeta(index)
-          meta.hidden = meta.hidden === null ? !this.data.datasets[index].hidden : null
-          this.update()
-        }
-      },
       scales: {
         y: {
-          title: { display: true, text: '配速（秒/公里）' },
-          reverse: true
+          title: { display: true, text: '配速（分钟/公里）' },
+          reverse: true,
+          grid: {
+            color: 'rgba(148, 163, 184, 0.28)',
+            lineWidth: 1
+          },
+          ticks: {
+            callback: function(value) {
+              return `${Number(value).toFixed(1)}`
+            }
+          }
         },
         x: {
-          title: { display: true, text: '组号' }
+          title: { display: true, text: '组号' },
+          grid: {
+            color: 'rgba(148, 163, 184, 0.14)',
+            lineWidth: 1,
+            tickLength: 4
+          }
         }
       }
     }
@@ -830,6 +922,7 @@ const updateCharts = () => {
 onMounted(() => {
   loadFromLocalStorage()
   syncSelectedSession()
+  syncChartSelection()
   // 等待 DOM 更新后再渲染图表
   setTimeout(updateCharts, 100)
 })
@@ -936,9 +1029,66 @@ onBeforeUnmount(() => {
   margin-bottom: 24px;
 }
 
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
 .chart-container h3 {
-  margin-bottom: 16px;
   font-size: 1.125rem;
+}
+
+.chart-actions,
+.chart-date-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chart-action-btn,
+.chart-date-option {
+  min-height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.chart-action-btn {
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.chart-action-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--accent);
+}
+
+.chart-date-options {
+  margin-bottom: 16px;
+}
+
+.chart-date-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.chart-date-option input {
+  accent-color: var(--accent);
+}
+
+.chart-date-option.is-active {
+  color: var(--text-primary);
+  border-color: rgba(99, 102, 241, 0.65);
+  background: rgba(99, 102, 241, 0.14);
 }
 
 .session-card {
@@ -1266,6 +1416,11 @@ onBeforeUnmount(() => {
 @media (max-width: 768px) {
   .stats-overview {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .chart-header {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .calendar-header {
