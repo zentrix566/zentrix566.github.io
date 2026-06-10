@@ -89,7 +89,6 @@
       <div v-if="selectedSession" class="session-card selected-session-card">
         <div class="session-header">
           <span class="session-date">{{ selectedSession.date }}</span>
-          <button @click="deleteSession(selectedSession.date)" class="btn-delete">删除</button>
         </div>
         <table class="data-table">
           <thead>
