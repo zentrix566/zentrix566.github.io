@@ -2,23 +2,6 @@
   <div class="interval-training">
     <h1 class="page-title">间歇训练数据分析</h1>
 
-    <!-- 添加新训练按钮 -->
-    <div class="action-bar">
-      <button @click="showAddModal = true" class="btn btn-primary">
-        + 添加训练记录
-      </button>
-      <button @click="exportData" class="btn btn-secondary">
-        导出数据
-      </button>
-      <label class="btn btn-secondary">
-        导入数据
-        <input type="file" @change="importData" accept=".json" hidden>
-      </label>
-      <button @click="showGistModal = true" class="btn btn-secondary">
-        ☁️ 云端同步
-      </button>
-    </div>
-
     <!-- 统计概览 -->
     <div class="stats-overview">
       <div class="stat-card">
