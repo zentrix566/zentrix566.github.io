@@ -297,11 +297,26 @@ const initialData = [
       { time: '01:49.29', pace: '4分33秒' },
       { time: '01:52.16', pace: '4分40秒' }
     ]
+  },
+  {
+    date: '2026/6/11（周四）',
+    laps: [
+      { time: '01:57.63', pace: '4分54秒' },
+      { time: '01:52.36', pace: '4分41秒' },
+      { time: '01:54.52', pace: '4分46秒' },
+      { time: '02:01.26', pace: '5分03秒' },
+      { time: '01:58.71', pace: '4分57秒' },
+      { time: '02:00.28', pace: '5分01秒' },
+      { time: '01:59.38', pace: '4分58秒' },
+      { time: '02:02.40', pace: '5分06秒' },
+      { time: '01:51.03', pace: '4分38秒' },
+      { time: '01:56.36', pace: '4分51秒' }
+    ]
   }
 ]
 
-const DATA_VERSION = 'v8'
-const PREVIOUS_DATA_VERSION = 'v7'
+const DATA_VERSION = 'v9'
+const PREVIOUS_DATA_VERSION = 'v8'
 const INTERVAL_DISTANCE_KM = 0.4
 const trainingSessions = ref([])
 
