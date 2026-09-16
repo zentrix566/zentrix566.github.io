@@ -3,6 +3,13 @@
 // 渲染层可参考 E:\github\my-index\src\data\changelog.js 与 Changelog.vue。
 export const changelog = [
   {
+    date: '2026-09-17',
+    title: '新增炉石灌注法斩杀计算器',
+    changes: [
+      '【炉石灌注法】新增灌注法斩杀计算器（/imbue-mage）：输入当前技能伤害、敌方英雄血量与最多 7 个随从血量，并排比较鲁莽的学徒单下和伴唱机＋学徒的总弹幕、稳打脸下限与斩杀结论；区分稳斩、概率斩杀和不能斩杀，概率局面提供固定样本模拟成功率。'
+    ]
+  },
+  {
     date: '2026-09-02',
     title: '新增炉石传说上传说记录',
     changes: [
