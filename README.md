@@ -91,7 +91,7 @@ npm run preview
 
 ## 部署（GitHub Pages）
 
-本仓库已配置 GitHub Actions 工作流（`.github/workflows/deploy.yml`）：推送到 `main` 分支即自动 `npm run build` 并把 `dist/` 发布到 GitHub Pages，无需手动上传产物。
+本仓库已配置 GitHub Actions 工作流（`.github/workflows/deploy.yml`）：推送到 `main` 分支即自动 `npm run build` 并把 `dist/` 发布到 GitHub Pages，无需手动上传产物。`public/404.html` 会将 GitHub Pages 找不到的深层链接回退给 Vue 路由处理，因此可直接访问如 `/imbue-mage` 的页面地址。
 
 首次启用需在仓库 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**（只设一次）。
 

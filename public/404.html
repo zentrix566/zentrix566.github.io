@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>正在打开页面…</title>
+    <script>
+      const spaPath = window.location.pathname + window.location.search + window.location.hash
+      const homeUrl = new URL('/', window.location.origin)
+      homeUrl.searchParams.set('spa-path', spaPath)
+      window.location.replace(homeUrl)
+    </script>
+  </head>
+  <body></body>
+</html>

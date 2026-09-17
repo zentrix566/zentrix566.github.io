@@ -12,6 +12,13 @@
   </head>
   <body>
     <div id="app"></div>
+    <script>
+      // GitHub Pages 找不到深层地址时会先打开 public/404.html；在 Vue 启动前恢复原路径。
+      const spaPath = new URLSearchParams(window.location.search).get('spa-path')
+      if (spaPath?.startsWith('/') && !spaPath.startsWith('//')) {
+        window.history.replaceState(null, '', spaPath)
+      }
+    </script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
