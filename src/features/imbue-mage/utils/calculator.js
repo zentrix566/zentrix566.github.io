@@ -3,9 +3,13 @@ function positiveInt(value, fallback = 0) {
   return Number.isFinite(number) && number > 0 ? number : fallback
 }
 
-export function normalizeBoard(heroHealth, minionHealths) {
+export function normalizeBoard(heroHealth, heroArmor, minionHealths) {
+  const normalizedHealth = positiveInt(heroHealth)
+  const normalizedArmor = positiveInt(heroArmor)
   return {
-    heroHealth: positiveInt(heroHealth),
+    heroHealth: normalizedHealth,
+    heroArmor: normalizedArmor,
+    effectiveHealth: normalizedHealth + normalizedArmor,
     minionHealths: minionHealths
       .map((health) => positiveInt(health))
       .filter(Boolean)
@@ -13,8 +17,8 @@ export function normalizeBoard(heroHealth, minionHealths) {
   }
 }
 
-function hashScenario(skillDamage, heroHealth, minionHealths, multiplier) {
-  const text = `${skillDamage}|${heroHealth}|${minionHealths.join(',')}|${multiplier}`
+function hashScenario(skillDamage, effectiveHealth, minionHealths, triggerCount) {
+  const text = `${skillDamage}|${effectiveHealth}|${minionHealths.join(',')}|${triggerCount}`
   let hash = 2166136261
   for (let index = 0; index < text.length; index += 1) {
     hash ^= text.charCodeAt(index)
@@ -34,28 +38,36 @@ function mulberry32(seed) {
   }
 }
 
-export function calculateScenario({ skillDamage, heroHealth, minionHealths, multiplier = 1, runs = 40000 }) {
+export function calculateScenario({
+  skillDamage,
+  heroHealth,
+  heroArmor = 0,
+  minionHealths,
+  multiplier = 1,
+  fixedTriggerCount = 0,
+  runs = 40000
+}) {
   const damage = positiveInt(skillDamage)
-  const board = normalizeBoard(heroHealth, minionHealths)
+  const board = normalizeBoard(heroHealth, heroArmor, minionHealths)
   const targetCount = board.minionHealths.length + 1
-  const triggerCount = targetCount * multiplier
+  const triggerCount = positiveInt(fixedTriggerCount) || targetCount * multiplier
   const totalPings = damage * triggerCount
   const minionHealthTotal = board.minionHealths.reduce((sum, health) => sum + health, 0)
   const guaranteedFaceDamage = Math.max(0, totalPings - minionHealthTotal)
   const maximumFaceDamage = totalPings
 
   let status = 'impossible'
-  if (board.heroHealth > 0 && guaranteedFaceDamage >= board.heroHealth) status = 'guaranteed'
-  else if (board.heroHealth > 0 && maximumFaceDamage >= board.heroHealth) status = 'possible'
+  if (board.effectiveHealth > 0 && guaranteedFaceDamage >= board.effectiveHealth) status = 'guaranteed'
+  else if (board.effectiveHealth > 0 && maximumFaceDamage >= board.effectiveHealth) status = 'possible'
 
   let lethalRuns = 0
   let totalFaceDamage = 0
-  if (damage > 0 && board.heroHealth > 0 && runs > 0) {
-    const random = mulberry32(hashScenario(damage, board.heroHealth, board.minionHealths, multiplier))
+  if (damage > 0 && board.effectiveHealth > 0 && runs > 0) {
+    const random = mulberry32(hashScenario(damage, board.effectiveHealth, board.minionHealths, triggerCount))
     for (let run = 0; run < runs; run += 1) {
       const minions = board.minionHealths.slice()
       let heroDamage = 0
-      for (let ping = 0; ping < totalPings && heroDamage < board.heroHealth; ping += 1) {
+      for (let ping = 0; ping < totalPings && heroDamage < board.effectiveHealth; ping += 1) {
         const living = []
         for (let index = 0; index < minions.length; index += 1) {
           if (minions[index] > 0) living.push(index)
@@ -64,19 +76,27 @@ export function calculateScenario({ skillDamage, heroHealth, minionHealths, mult
         if (target === living.length) heroDamage += 1
         else minions[living[target]] -= 1
       }
-      totalFaceDamage += Math.min(heroDamage, board.heroHealth)
-      if (heroDamage >= board.heroHealth) lethalRuns += 1
+      totalFaceDamage += Math.min(heroDamage, board.effectiveHealth)
+      if (heroDamage >= board.effectiveHealth) lethalRuns += 1
     }
   }
 
   return {
     status,
+    heroHealth: board.heroHealth,
+    heroArmor: board.heroArmor,
+    effectiveHealth: board.effectiveHealth,
     targetCount,
     triggerCount,
     totalPings,
     minionHealthTotal,
     guaranteedFaceDamage,
     maximumFaceDamage,
+    guaranteedOverkill: Math.max(0, guaranteedFaceDamage - board.effectiveHealth),
+    maximumOverkill: Math.max(0, maximumFaceDamage - board.effectiveHealth),
+    minimumLethalSkillDamage: board.effectiveHealth > 0
+      ? Math.ceil(board.effectiveHealth / triggerCount)
+      : 0,
     lethalProbability: status === 'guaranteed' ? 1 : status === 'impossible' ? 0 : lethalRuns / runs,
     averageFaceDamage: runs > 0 ? totalFaceDamage / runs : 0
   }
