@@ -126,12 +126,12 @@
                 {{ u.name }} {{ u.id }}
                 <small v-if="u.id === byteUnit">输入</small>
               </div>
-              <strong>{{ u.id === byteUnit ? formatNumber(byteResults[u.id]) : formatSigFigs(byteResults[u.id]) }}</strong>
+              <strong>{{ byteCardText(u) }}</strong>
             </article>
           </div>
 
           <p class="form-hint">
-            按 1024 进制换算：字节 → KB 除以 1024，KB → MB 再除以 1024，也就是「字节换成兆 = 连除两次 1024」，往上 GB、TB 依此类推。换算结果保留 2 位有效数字，输入单位所在卡片按原值显示。
+            按 1024 进制换算：字节 → KiB 除以 1024，KiB → MiB 再除以 1024，也就是「字节换成兆 = 连除两次 1024」，往上 GiB、TiB 依此类推。1024 进制按 IEC 记法写作 KiB/MiB/GiB/TiB，也就是常说的 KB/MB/GB/TB。换算结果保留 2 位有效数字，输入单位所在卡片按原值显示。
           </p>
         </div>
       </div>
@@ -404,13 +404,13 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
 
 // ==================== 字节换算 ====================
 
-// 1024 进制存储单位，相邻单位相差 1024 倍
+// 1024 进制存储单位，相邻单位相差 1024 倍；按 IEC 二进制前缀记法（KiB/MiB/GiB/TiB）
 const byteUnits = [
   { id: 'B', name: '字节' },
-  { id: 'KB', name: '千字节' },
-  { id: 'MB', name: '兆字节' },
-  { id: 'GB', name: '吉字节' },
-  { id: 'TB', name: '太字节' }
+  { id: 'KiB', name: '千字节' },
+  { id: 'MiB', name: '兆字节' },
+  { id: 'GiB', name: '吉字节' },
+  { id: 'TiB', name: '太字节' }
 ]
 
 const byteInput = ref('')
@@ -432,6 +432,14 @@ const byteResults = computed(() => {
   })
   return results
 })
+
+// 卡片数值：输入单位所在卡按原值显示，其余保留 2 位有效数字；数值后标注单位
+function byteCardText(u) {
+  const value = byteResults.value[u.id]
+  if (value === null || !Number.isFinite(value)) return '—'
+  const text = u.id === byteUnit.value ? formatNumber(value) : formatSigFigs(value)
+  return `${text} ${u.id}`
+}
 </script>
 
 <style scoped>
