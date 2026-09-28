@@ -40,6 +40,9 @@
       </RouterLink>
       </div>
     </section>
+    <transition name="btt">
+      <button v-if="showBackTop" class="back-top" type="button" aria-label="回到顶部" @click="toTop">↑</button>
+    </transition>
   </div>
 </template>
 
@@ -47,16 +50,16 @@
 // 首页：各子项目入口卡片由 registry 的 homeCards 自动生成，
 // 新增子项目无需在此手写卡片，只需在其 index.js 的 manifest 里填好
 // emoji / title / description（card:false 可隐藏卡片但保留路由）。
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { homeCards } from '../features/registry.js'
 
 // 首页分类特意在这里静态维护：调整归属只需改 slug，不影响 feature 的自动注册和路由。
 const categories = [
   { key: 'favorites', name: '收藏', emoji: '★', slugs: ['imbue-mage', 'history-timeline', 'biography', 'dynasty-map', 'subway', 'weight-tracker', 'running-dashboard', 'marathon-results'] },
-  { key: 'personal', name: '个人', emoji: '🏃', slugs: ['weight-tracker', 'running-dashboard', 'marathon-results'] },
+  { key: 'personal', name: '个人', emoji: '🏃', slugs: ['weight-tracker', 'running-dashboard', 'marathon-results', 'hearthstone-legends'] },
   { key: 'history', name: '历史', emoji: '🏛️', slugs: ['virtual-museum', 'officials', 'career-roles', 'contemporary-figures', 'jiangyin', 'xifengkou'] },
-  { key: 'games', name: '游戏', emoji: '🎮', slugs: ['jungle-chess', 'huapian', 'game-show', 'card-battle', 'emperor', 'minister', 'pet', 'stick-fight', 'fight', 'world-cup', 'canghai', 'domino', 'sand-pit', 'driving', 'transformer'] },
-  { key: 'life-tools', name: '生活与工具', emoji: '🧰', slugs: ['interval-training', 'countdown', 'creator-hall', 'secure-storage', 'calligraphy', 'nexus', 'office-chat'] }
+  { key: 'games', name: '游戏', emoji: '🎮', slugs: ['jungle-chess', 'huapian', 'game-show', 'card-battle', 'emperor', 'minister', 'pet', 'stick-fight', 'fight', 'world-cup', 'canghai', 'domino', 'sand-pit', 'driving', 'transformer', '3d-project', 'dragon-ball', 'pipes'] },
+  { key: 'life-tools', name: '生活与工具', emoji: '🧰', slugs: ['interval-training', 'countdown', 'creator-hall', 'secure-storage', 'calligraphy', 'nexus', 'office-chat', 'world-map'] }
 ]
 
 const visibleCategories = computed(() => {
@@ -68,6 +71,20 @@ const visibleCategories = computed(() => {
   const remaining = homeCards.filter((card) => !assigned.has(card.slug))
   return remaining.length ? [...grouped, { key: 'other', name: '其他', emoji: '🧩', cards: remaining }] : grouped
 })
+
+// 下滑超过一屏后显示「回到顶部」悬浮按钮
+const showBackTop = ref(false)
+function onScroll() {
+  showBackTop.value = window.scrollY > window.innerHeight
+}
+function toTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+onMounted(() => {
+  window.addEventListener('scroll', onScroll, { passive: true })
+  onScroll()
+})
+onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
 </script>
 
 <style scoped>
@@ -109,6 +126,44 @@ const visibleCategories = computed(() => {
 .category-nav a:hover {
   background: var(--primary-soft);
   color: var(--primary-dark);
+}
+
+.back-top {
+  position: fixed;
+  right: 26px;
+  bottom: 34px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1.15rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.back-top:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.btt-enter-active,
+.btt-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btt-enter-from,
+.btt-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
 }
 
 .category-section {
