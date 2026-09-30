@@ -6,7 +6,7 @@
     </h1>
     <p class="page-subtitle">按用途整理的小玩具，点开即玩。</p>
     <nav class="category-nav" aria-label="首页分类">
-      <a v-for="category in categories" :key="category.key" :href="`#${category.key}`">{{ category.name }}</a>
+      <a v-for="category in visibleCategories" :key="category.key" :href="`#${category.key}`">{{ category.name }}</a>
     </nav>
     <section v-for="category in visibleCategories" :id="category.key" :key="category.key" class="category-section">
       <div class="category-heading">
@@ -58,17 +58,28 @@ const categories = [
   { key: 'favorites', name: '收藏', emoji: '★', slugs: ['calculator', 'imbue-mage', 'history-timeline', 'biography', 'dynasty-map', 'subway', 'weight-tracker', 'running-dashboard', 'marathon-results'] },
   { key: 'personal', name: '个人', emoji: '🏃', slugs: ['weight-tracker', 'running-dashboard', 'marathon-results', 'hearthstone-legends'] },
   { key: 'history', name: '历史', emoji: '🏛️', slugs: ['virtual-museum', 'officials', 'career-roles', 'contemporary-figures', 'jiangyin', 'xifengkou'] },
-  { key: 'games', name: '游戏', emoji: '🎮', slugs: ['donkey-mill', 'jungle-chess', 'huapian', 'game-show', 'card-battle', 'emperor', 'minister', 'pet', 'stick-fight', 'fight', 'world-cup', 'canghai', 'domino', 'sand-pit', 'driving', 'transformer', '3d-project', 'dragon-ball', 'pipes'] },
-  { key: 'life-tools', name: '生活与工具', emoji: '🧰', slugs: ['interval-training', 'countdown', 'creator-hall', 'secure-storage', 'calligraphy', 'nexus', 'office-chat', 'world-map'] }
+  { key: 'games', name: '游戏', emoji: '🎮', slugs: ['shanghai', 'donkey-mill', 'jigsaw', 'jungle-chess', 'huapian', 'game-show', 'card-battle', 'emperor', 'minister', 'pet', 'stick-fight', 'fight', 'world-cup', 'canghai', 'domino', 'sand-pit', 'driving', 'transformer', '3d-project', 'dragon-ball', 'pipes'] },
+  { key: 'life-tools', name: '生活与工具', emoji: '🧰', slugs: ['age-compare', 'interval-training', 'countdown', 'creator-hall', 'secure-storage', 'calligraphy', 'nexus', 'office-chat', 'world-map'] }
 ]
+
+// 固定置顶的四个老项目，不参与「最近」计算
+const PINNED_SLUGS = ['history-timeline', 'biography', 'dynasty-map', 'subway']
+// 「最近」分类展示的最新项目数量
+const RECENT_COUNT = 4
 
 const visibleCategories = computed(() => {
   const cards = new Map(homeCards.map((card) => [card.slug, card]))
   const assigned = new Set(categories.flatMap((category) => category.slugs))
+  // 「最近」：置顶四强之外按 order 升序（order 越小越是新加的）取前 4 个，自动跟随新增项目更新
+  const recentCards = homeCards.filter((card) => !PINNED_SLUGS.includes(card.slug)).slice(0, RECENT_COUNT)
+  const recentSlugs = new Set(recentCards.map((card) => card.slug))
   const grouped = categories
     .map((category) => ({ ...category, cards: category.slugs.map((slug) => cards.get(slug)).filter(Boolean) }))
     .filter((category) => category.cards.length)
-  const remaining = homeCards.filter((card) => !assigned.has(card.slug))
+  // 「最近」固定插在「收藏」下方
+  const favIndex = grouped.findIndex((category) => category.key === 'favorites')
+  grouped.splice(favIndex + 1, 0, { key: 'recent', name: '最近', emoji: '🕒', cards: recentCards })
+  const remaining = homeCards.filter((card) => !assigned.has(card.slug) && !recentSlugs.has(card.slug))
   return remaining.length ? [...grouped, { key: 'other', name: '其他', emoji: '🧩', cards: remaining }] : grouped
 })
 
