@@ -158,6 +158,7 @@ zentrix566.github.io/
 │     └─ pipes/                3D 管道屏保（Three.js 格子随机生长 + 弯头/封口几何 + 锁屏模式）
 │     └─ hearthstone-legends/  炉石传说上传说记录（按月记录数据 + 模式筛选与统计页）
 │     └─ calculator/           实用计算器（基础计算 + 字节换算，历史结果可带入运算）
+│     └─ donkey-mill/          驴拉磨（canvas 俯视磨坊 + 驴体力心情模拟 + 限时订单经营 + 升级商店）
 ├─ public/
 │  └─ jiangyin-map.png    江阴保卫战底图
 └─ README.md / LICENSE / .gitignore / AGENTS.md / AGENTS-features.md

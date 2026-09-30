@@ -58,7 +58,7 @@ const categories = [
   { key: 'favorites', name: '收藏', emoji: '★', slugs: ['calculator', 'imbue-mage', 'history-timeline', 'biography', 'dynasty-map', 'subway', 'weight-tracker', 'running-dashboard', 'marathon-results'] },
   { key: 'personal', name: '个人', emoji: '🏃', slugs: ['weight-tracker', 'running-dashboard', 'marathon-results', 'hearthstone-legends'] },
   { key: 'history', name: '历史', emoji: '🏛️', slugs: ['virtual-museum', 'officials', 'career-roles', 'contemporary-figures', 'jiangyin', 'xifengkou'] },
-  { key: 'games', name: '游戏', emoji: '🎮', slugs: ['jungle-chess', 'huapian', 'game-show', 'card-battle', 'emperor', 'minister', 'pet', 'stick-fight', 'fight', 'world-cup', 'canghai', 'domino', 'sand-pit', 'driving', 'transformer', '3d-project', 'dragon-ball', 'pipes'] },
+  { key: 'games', name: '游戏', emoji: '🎮', slugs: ['donkey-mill', 'jungle-chess', 'huapian', 'game-show', 'card-battle', 'emperor', 'minister', 'pet', 'stick-fight', 'fight', 'world-cup', 'canghai', 'domino', 'sand-pit', 'driving', 'transformer', '3d-project', 'dragon-ball', 'pipes'] },
   { key: 'life-tools', name: '生活与工具', emoji: '🧰', slugs: ['interval-training', 'countdown', 'creator-hall', 'secure-storage', 'calligraphy', 'nexus', 'office-chat', 'world-map'] }
 ]
 
