@@ -5,6 +5,7 @@ import { calculateScenario } from '../utils/calculator.js'
 const skillDamage = ref(6)
 const heroHealth = ref(30)
 const heroArmor = ref(0)
+const boardAttack = ref(0)
 const minionHealths = ref([4, 4, 0, 0, 0, 0, 0])
 const simulationRuns = 40000
 const minionPresets = [
@@ -13,7 +14,8 @@ const minionPresets = [
   { label: '5个1', healths: [1, 1, 1, 1, 1, 0, 0] },
   { label: '4个1', healths: [1, 1, 1, 1, 0, 0, 0] },
   { label: '3个1', healths: [1, 1, 1, 0, 0, 0, 0] },
-  { label: '2个1', healths: [1, 1, 0, 0, 0, 0, 0] }
+  { label: '2个1', healths: [1, 1, 0, 0, 0, 0, 0] },
+  { label: '1个1', healths: [1, 0, 0, 0, 0, 0, 0] }
 ]
 
 const cleanMinions = computed(() => minionHealths.value
@@ -27,11 +29,13 @@ const scenarios = computed(() => [
     key: 'apprentice',
     title: '只有鲁莽的学徒',
     badge: '单倍触发',
+    slots: '学徒占 1 格',
     result: calculateScenario({
       skillDamage: skillDamage.value,
       heroHealth: heroHealth.value,
       heroArmor: heroArmor.value,
       minionHealths: cleanMinions.value,
+      boardAttack: boardAttack.value,
       multiplier: 1,
       runs: simulationRuns
     })
@@ -40,11 +44,13 @@ const scenarios = computed(() => [
     key: 'buddy',
     title: '伴唱机 ＋ 鲁莽的学徒',
     badge: '双倍触发',
+    slots: '两件共占 2 格',
     result: calculateScenario({
       skillDamage: skillDamage.value,
       heroHealth: heroHealth.value,
       heroArmor: heroArmor.value,
       minionHealths: cleanMinions.value,
+      boardAttack: boardAttack.value,
       multiplier: 2,
       runs: simulationRuns
     })
@@ -53,11 +59,13 @@ const scenarios = computed(() => [
     key: 'solo-buddy',
     title: '单独伴唱机',
     badge: '固定触发两次',
+    slots: '伴唱机占 1 格',
     result: calculateScenario({
       skillDamage: skillDamage.value,
       heroHealth: heroHealth.value,
       heroArmor: heroArmor.value,
       minionHealths: cleanMinions.value,
+      boardAttack: boardAttack.value,
       fixedTriggerCount: 2,
       runs: simulationRuns
     })
@@ -122,7 +130,12 @@ function faceDamageLabel(result) {
             <span>英雄护甲</span>
             <input v-model.number="heroArmor" type="number" min="0" max="999">
           </label>
+          <label>
+            <span>场上攻击力</span>
+            <input v-model.number="boardAttack" type="number" min="0" max="999">
+          </label>
         </div>
+        <p class="board-note">默认 0：一套技能 combo 就结束时，场上通常没有能动的随从，无需填写。场上攻击力 = 本回合能动（可攻击）随从的攻击力合计，填了会直接加进打脸伤害与斩杀判定。注意占格：学徒占 1 格、伴唱机占 1 格、两件套共占 2 格（场上最多 7 格），刚下场的随从不能动、不计攻击。</p>
 
         <div class="minion-head">
           <div><span>敌方随从血量</span><small>固定 7 个槽位，血量为 0 的随从不参与计算</small></div>
@@ -170,7 +183,7 @@ function faceDamageLabel(result) {
           <div class="damage-summary">
             <div>
               <span>总伤害</span>
-              <strong>{{ scenario.result.totalPings }}</strong>
+              <strong>{{ scenario.result.totalDamage }}</strong>
             </div>
             <div>
               <span>打脸伤害</span>
@@ -197,18 +210,20 @@ function faceDamageLabel(result) {
           <dl>
             <div><dt>初始敌方角色</dt><dd>{{ scenario.result.targetCount }}</dd></div>
             <div><dt>技能触发</dt><dd>{{ scenario.result.triggerCount }} 次</dd></div>
+            <div><dt>组合占格</dt><dd>{{ scenario.slots }}</dd></div>
+            <div><dt>场上攻击力</dt><dd>+{{ scenario.result.boardAttack }}</dd></div>
             <div><dt>稳打脸下限</dt><dd>{{ scenario.result.guaranteedFaceDamage }} 点</dd></div>
             <div><dt>敌方血量＋护甲</dt><dd>{{ scenario.result.effectiveHealth }} 点</dd></div>
           </dl>
 
           <p v-if="scenario.result.status === 'guaranteed'" class="result-note">
-            就算每个随从都吃满 {{ minionTotal }} 点，剩余 {{ scenario.result.guaranteedFaceDamage }} 点仍足够击杀英雄。
+            就算每个随从都吃满 {{ minionTotal }} 点，剩余 {{ scenario.result.guaranteedFaceDamage }} 点（含场上攻击力 {{ scenario.result.boardAttack }} 点）仍足够击杀英雄。
           </p>
           <p v-else-if="scenario.result.status === 'possible'" class="result-note">
             不是稳斩；约 {{ simulationRuns.toLocaleString() }} 次固定样本模拟中，平均对英雄造成 {{ scenario.result.averageFaceDamage.toFixed(1) }} 点有效伤害。
           </p>
           <p v-else class="result-note">
-            全部 {{ scenario.result.totalPings }} 点即使一发不分给随从，也不足以击穿英雄的 {{ effectiveHealth }} 点血量与护甲。
+            全部 {{ scenario.result.totalDamage }} 点伤害（含场上攻击力）即使一发不分给随从，也不足以击穿英雄的 {{ effectiveHealth }} 点血量与护甲。
           </p>
         </article>
       </section>
@@ -216,7 +231,8 @@ function faceDamageLabel(result) {
       <section class="rule-card">
         <h2>怎么算的</h2>
         <p><code>学徒触发次数 = 初始随从数 + 1 个英雄</code>；伴唱机＋学徒时再乘 2，单独伴唱机固定触发 2 次。每次触发产生“当前技能伤害”枚 1 点弹幕。</p>
-        <p><code>稳打脸下限 = 总弹幕 − 所有随从血量</code>。下限不低于英雄血量就是稳斩；只有总弹幕够则是概率斩杀；总弹幕都不够就是不能斩。不能斩时会给出满打脸可斩所需的最低技能伤害。</p>
+        <p><code>稳打脸下限 = 总弹幕 − 所有随从血量 + 场上攻击力</code>。下限不低于英雄血量就是稳斩；只有总弹幕够则是概率斩杀；总弹幕都不够就是不能斩。不能斩时会给出满打脸可斩所需的最低技能伤害。</p>
+        <p>「场上攻击力」填本回合能动随从的攻击力合计（不含刚下场、尚不能攻击的学徒与伴唱机）；学徒占 1 格、伴唱机占 1 格、两件套共占 2 格，排随从时注意场上最多 7 格。</p>
         <small>概率斩杀率为随机目标模拟估算值；假定每枚弹幕在当时所有存活敌方角色中等概率选取目标，不计圣盾、减伤、免疫、亡语召唤和其他特殊效果。</small>
       </section>
     </div>
@@ -234,7 +250,8 @@ function faceDamageLabel(result) {
 .hero-copy > p:last-child { max-width: 760px; margin: 0; color: #c3bdca; line-height: 1.7; }
 .input-panel, .result-card, .rule-card { border: 1px solid rgba(235, 211, 166, .16); border-radius: 18px; background: rgba(26, 28, 43, .88); box-shadow: 0 22px 50px rgba(0, 0, 0, .23); }
 .input-panel { padding: 22px; }
-.core-inputs { display: grid; grid-template-columns: repeat(3, minmax(150px, 220px)); gap: 16px; align-items: end; }
+.core-inputs { display: grid; grid-template-columns: repeat(4, minmax(140px, 1fr)); gap: 16px; align-items: end; }
+.board-note { margin: 12px 0 0; color: #8e8999; font-size: .76rem; line-height: 1.65; }
 .core-inputs label, .minion-input { display: grid; gap: 7px; }
 .core-inputs label span, .minion-head span, .minion-input span { color: #aaa5b7; font-size: .78rem; font-weight: 750; }
 input { box-sizing: border-box; width: 100%; border: 1px solid rgba(255,255,255,.14); border-radius: 10px; padding: 10px 12px; outline: none; background: rgba(255,255,255,.055); color: #fff; font: inherit; font-size: 1.12rem; font-weight: 800; }

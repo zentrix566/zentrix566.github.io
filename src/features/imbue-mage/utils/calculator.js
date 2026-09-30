@@ -43,18 +43,21 @@ export function calculateScenario({
   heroHealth,
   heroArmor = 0,
   minionHealths,
+  boardAttack = 0,
   multiplier = 1,
   fixedTriggerCount = 0,
   runs = 40000
 }) {
   const damage = positiveInt(skillDamage)
+  const attack = positiveInt(boardAttack)
   const board = normalizeBoard(heroHealth, heroArmor, minionHealths)
   const targetCount = board.minionHealths.length + 1
   const triggerCount = positiveInt(fixedTriggerCount) || targetCount * multiplier
   const totalPings = damage * triggerCount
+  const totalDamage = totalPings + attack
   const minionHealthTotal = board.minionHealths.reduce((sum, health) => sum + health, 0)
-  const guaranteedFaceDamage = Math.max(0, totalPings - minionHealthTotal)
-  const maximumFaceDamage = totalPings
+  const guaranteedFaceDamage = Math.max(0, totalPings - minionHealthTotal) + attack
+  const maximumFaceDamage = totalPings + attack
 
   let status = 'impossible'
   if (board.effectiveHealth > 0 && guaranteedFaceDamage >= board.effectiveHealth) status = 'guaranteed'
@@ -76,8 +79,8 @@ export function calculateScenario({
         if (target === living.length) heroDamage += 1
         else minions[living[target]] -= 1
       }
-      totalFaceDamage += Math.min(heroDamage, board.effectiveHealth)
-      if (heroDamage >= board.effectiveHealth) lethalRuns += 1
+      totalFaceDamage += Math.min(heroDamage + attack, board.effectiveHealth)
+      if (heroDamage + attack >= board.effectiveHealth) lethalRuns += 1
     }
   }
 
@@ -86,16 +89,18 @@ export function calculateScenario({
     heroHealth: board.heroHealth,
     heroArmor: board.heroArmor,
     effectiveHealth: board.effectiveHealth,
+    boardAttack: attack,
     targetCount,
     triggerCount,
     totalPings,
+    totalDamage,
     minionHealthTotal,
     guaranteedFaceDamage,
     maximumFaceDamage,
     guaranteedOverkill: Math.max(0, guaranteedFaceDamage - board.effectiveHealth),
     maximumOverkill: Math.max(0, maximumFaceDamage - board.effectiveHealth),
     minimumLethalSkillDamage: board.effectiveHealth > 0
-      ? Math.ceil(board.effectiveHealth / triggerCount)
+      ? Math.max(0, Math.ceil((board.effectiveHealth - attack) / triggerCount))
       : 0,
     lethalProbability: status === 'guaranteed' ? 1 : status === 'impossible' ? 0 : lethalRuns / runs,
     averageFaceDamage: runs > 0 ? totalFaceDamage / runs : 0
