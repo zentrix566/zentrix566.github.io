@@ -3,6 +3,13 @@
 // 渲染层可参考 E:\github\my-index\src\data\changelog.js 与 Changelog.vue。
 export const changelog = [
   {
+    date: '2026-10-12',
+    title: '补充海淀马拉松完赛成绩',
+    changes: [
+      '【比赛成绩】新增中邮保险·2026海淀马拉松（全马）成绩：净计时 05:19:57、枪声成绩 05:23:52，全程分段配速入库，路跑比赛记录增至 11 场。'
+    ]
+  },
+  {
     date: '2026-10-06',
     title: '补充 9 月跑步与体重数据及 10 月狂野上传说记录',
     changes: [
