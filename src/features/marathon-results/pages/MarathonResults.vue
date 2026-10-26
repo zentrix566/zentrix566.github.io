@@ -12,13 +12,13 @@
         <div class="hero-copy">
           <p class="eyebrow">MY RACE ARCHIVE · 2024—2026</p>
           <h1>我的{{ discipline === 'road' ? '马拉松' : '越野跑' }}<br><span>比赛成绩</span></h1>
-          <p class="hero-lead">{{ discipline === 'road' ? '十场比赛，不只记录终点时间，也记录每一次把极限推远的过程。' : '六次翻山越岭，用距离、爬升和等强配速记录山野里的每一步。' }}</p>
+          <p class="hero-lead">{{ discipline === 'road' ? `${roadRaceLog.length} 场比赛，不只记录终点时间，也记录每一次把极限推远的过程。` : `${trailRaceLog.length} 次翻山越岭，用距离、爬升和等强配速记录山野里的每一步。` }}</p>
         </div>
         <div class="bib" aria-label="参赛数据摘要">
           <span class="bib-label">RACES</span>
-          <strong>{{ discipline === 'road' ? 10 : 6 }}</strong>
+          <strong>{{ discipline === 'road' ? roadRaceLog.length : trailRaceLog.length }}</strong>
           <div class="bib-rule"></div>
-          <small>{{ discipline === 'road' ? '6 全马 · 3 半马 · 1 场 10K' : '319.07 公里 · 累计爬升 14,352 米' }}</small>
+          <small>{{ discipline === 'road' ? roadBreakdown : '319.07 公里 · 累计爬升 14,352 米' }}</small>
           <i v-for="n in 8" :key="n" :style="{ left: `${8 + (n - 1) * 12}%` }"></i>
         </div>
       </header>
@@ -34,6 +34,92 @@
           <strong>−{{ formatDuration(fullImprovement) }}</strong>
           <p>从天津到石家庄<br><small>完赛时间缩短 {{ improvementPercent }}%</small></p>
         </article>
+      </section>
+
+      <section class="panel training-panel">
+        <div class="section-head">
+          <div><p class="kicker">TRAINING NOTES</p><h2>训练复盘与计划</h2><p>依据 {{ notes.raceName }}的分段整理（{{ formatDate(notes.updated) }}），下一场备战以此为准。</p></div>
+        </div>
+        <div class="training-review">
+          <div class="review-copy">
+            <h3>{{ notes.review.headline }}</h3>
+            <p>{{ notes.review.summary }}</p>
+            <ul><li v-for="cause in notes.review.causes" :key="cause">{{ cause }}</li></ul>
+          </div>
+          <div class="review-fades">
+            <div v-for="fade in notes.review.fades" :key="fade.range" :class="['fade-row', fade.state]">
+              <span>{{ fade.range }}</span><strong>{{ fade.pace }}</strong><small>{{ fade.note }}</small>
+            </div>
+          </div>
+        </div>
+        <div class="focus-grid">
+          <article v-for="(focus, index) in notes.focuses" :key="focus.title" class="focus-card">
+            <span class="focus-num">{{ String(index + 1).padStart(2, '0') }}</span>
+            <h4>{{ focus.title }}</h4>
+            <p>{{ focus.detail }}</p>
+          </article>
+        </div>
+        <div class="tips-list"><p v-for="tip in notes.tips" :key="tip">💡 {{ tip }}</p></div>
+        <div class="goal-ladder">
+          <div v-for="goal in notes.goals" :key="goal.time" :class="['goal-step', { done: goal.done, next: goal.next }]">
+            <span>{{ goal.label }}</span>
+            <strong>{{ goal.time }}</strong>
+            <small v-if="goal.pace">{{ goal.pace }}</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel calendar-panel">
+        <div class="section-head">
+          <div><p class="kicker">DAILY SCHEDULE</p><h2>每日训练日历</h2><p>路线图展开到每一天：周一力量 · 周二质量课 · 周四中距离 · 周日长距离，每第 4 周减量，赛前自动 taper。悬停看当天详情。</p></div>
+        </div>
+        <div class="cal-head">
+          <div class="cal-nav">
+            <button :disabled="!canPrev" aria-label="上个月" @click="shiftMonth(-1)">‹</button>
+            <span class="cal-month">{{ calMonth.slice(0, 4) }} 年 {{ Number(calMonth.slice(5)) }} 月</span>
+            <button :disabled="!canNext" aria-label="下个月" @click="shiftMonth(1)">›</button>
+          </div>
+          <div class="cal-summary">
+            <span>月跑量约 <strong>{{ calData.summary.km }}</strong> km</span>
+            <span>长距离峰值 <strong>{{ calData.summary.long }}</strong> km</span>
+            <span>质量课 <strong>{{ calData.summary.quality }}</strong> 次</span>
+            <span v-if="calData.summary.race" class="cal-race">🏁 {{ calData.summary.race }}</span>
+          </div>
+        </div>
+        <div class="cal-grid">
+          <span v-for="d in ['一', '二', '三', '四', '五', '六', '日']" :key="d" class="cal-dow">{{ d }}</span>
+          <div v-for="(cell, index) in calData.cells" :key="index" :class="['cal-cell', cell?.type, { blank: !cell, today: cell?.date === todayIso }]" :title="cell?.note">
+            <template v-if="cell">
+              <span class="cal-day">{{ cell.day }}</span>
+              <strong>{{ cell.label }}</strong>
+              <small>{{ cell.dist ? `${cell.dist}km` : '' }}</small>
+            </template>
+          </div>
+        </div>
+        <p class="cal-note">🏁 比赛日为按往年惯例的预估日期（石家庄 3 月末周日、半马检验 8 月末、秋赛 10 月下旬），官宣后更新 dailyPlan.js 的 races 即自动重排；距离为四舍五入的参考值，按当时体感微调。</p>
+      </section>
+
+      <section class="panel roadmap-panel">
+        <div class="section-head">
+          <div><p class="kicker">ROADMAP</p><h2>{{ notes.plan.headline }}</h2><p>{{ notes.plan.summary }}</p></div>
+        </div>
+        <ol class="plan-timeline">
+          <li v-for="phase in notes.plan.phases" :key="phase.period">
+            <div class="phase-rail">
+              <span class="phase-months">{{ phase.months }}</span>
+              <span class="phase-period">{{ phase.period }}</span>
+            </div>
+            <div class="phase-body">
+              <h4>{{ phase.title }}<small>{{ phase.race }}</small></h4>
+              <div class="phase-facts">
+                <span>跑量 · {{ phase.mileage }}</span>
+                <span>长距离 · {{ phase.long }}</span>
+                <span>质量课 · {{ phase.quality }}</span>
+              </div>
+              <p>{{ phase.note }}</p>
+            </div>
+          </li>
+        </ol>
       </section>
 
       <section class="panel trend-panel">
@@ -208,6 +294,8 @@
 import { computed, ref, watch } from 'vue'
 import { categoryDistance, raceResults } from '../data/raceResults.js'
 import { trailResults } from '../data/trailResults.js'
+import { trainingNotes } from '../data/trainingNotes.js'
+import { monthCells, planRange } from '../data/dailyPlan.js'
 
 const discipline = ref('road')
 const categories = ['全马', '半马', '10公里']
@@ -216,6 +304,17 @@ const selectedDate = ref('2026-03-29')
 const selectedTrailDate = ref('2026-07-10')
 const roadRaceLog = [...raceResults].sort((a, b) => b.date.localeCompare(a.date))
 const trailRaceLog = [...trailResults].sort((a, b) => b.date.localeCompare(a.date))
+const roadBreakdown = ['全马', '半马', '10公里'].map((cat) => `${raceResults.filter((race) => race.category === cat).length} ${cat === '10公里' ? '场 10K' : cat}`).join(' · ')
+const notes = trainingNotes
+const todayIso = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10)
+const calMonth = ref('2026-10')
+const calData = computed(() => monthCells(calMonth.value))
+const shiftMonth = (delta) => {
+  const [y, m] = calMonth.value.split('-').map(Number)
+  calMonth.value = new Date(Date.UTC(y, m - 1 + delta, 1)).toISOString().slice(0, 7)
+}
+const canPrev = computed(() => calMonth.value > planRange[0])
+const canNext = computed(() => calMonth.value < planRange[1])
 const toSeconds = (value) => value.split(':').map(Number).reduce((total, part) => total * 60 + part, 0)
 const paceToSeconds = (value) => { const match = value.match(/(\d+)分(\d+)/); return Number(match[1]) * 60 + Number(match[2]) }
 const formatDuration = (seconds) => { const h = Math.floor(seconds / 3600); const m = Math.floor(seconds % 3600 / 60); const s = Math.round(seconds % 60); return h ? `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}` : `${m}:${String(s).padStart(2, '0')}` }
@@ -333,9 +432,15 @@ watch(activeCategory, (category) => { selectedDate.value = filteredRaces.value.a
 .detail-grid { display: grid; grid-template-columns: minmax(0,1.7fr) minmax(300px,.8fr); gap: 18px; scroll-margin-top: 84px; }.split-panel,.checkpoint-panel { padding: 28px; }.section-head.compact { align-items: center; }.section-head select { max-width: 330px; padding: 10px 34px 10px 12px; border: 1px solid #d8d5cc; border-radius: 10px; background: #f7f5ef; color: var(--ink); }.race-title { display: flex; gap: 14px; align-items: center; padding: 20px 0 10px; }.race-title h3 { margin: 0 0 4px; font-size: 1.05rem; }.race-title p { margin: 0; color: #657169; font-size: .85rem; }.category-tag { flex: 0 0 auto; padding: 7px 10px; border-radius: 8px; color: #fff; font-size: .78rem; font-weight: 900; }.category-tag.full { background: var(--orange); }.category-tag.half { background: #2758d6; }.category-tag.ten { color: var(--ink); background: var(--lime); }.split-dot { fill: #fff; stroke: var(--orange); stroke-width: 4; }.half-compare { display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: center; padding: 16px; border-radius: 14px; background: #f4f2eb; }.half-compare div { display: flex; flex-direction: column; }.half-compare span { color: #6e7972; font-size: .75rem; }.half-compare strong { font-size: 1.15rem; }.half-compare p { margin: 0; padding: 7px 10px; border-radius: 8px; font-size: .78rem; font-weight: 900; }.slower { color: #b23a20; background: #ffe2da; }.faster { color: #24621b; background: #e6f7c3; }
 .gun-gap { padding: 6px 9px; border-radius: 8px; color: #657169; background: #f0eee7; font-size: .75rem; font-weight: 800; }.checkpoint-list { display: grid; gap: 4px; margin-top: 20px; }.checkpoint-row { display: grid; grid-template-columns: 42px 1fr 68px; gap: 8px 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid #eeece6; }.checkpoint-row .km { font-size: .78rem; font-weight: 900; }.checkpoint-track { height: 5px; border-radius: 99px; background: #eceae4; overflow: hidden; }.checkpoint-track i { display: block; height: 100%; border-radius: inherit; background: var(--orange); }.checkpoint-row strong { font-size: .86rem; font-variant-numeric: tabular-nums; }.checkpoint-row small { grid-column: 2/4; color: #7b857f; font-size: .7rem; }
 .race-list-section { margin-top: 48px; }.race-list { margin-top: 20px; border-top: 2px solid var(--ink); }.race-row { width: 100%; display: grid; grid-template-columns: 54px 105px 1fr 115px 28px; gap: 16px; align-items: center; padding: 18px 8px; text-align: left; color: var(--ink); border: 0; border-bottom: 1px solid #d8d5cc; background: transparent; cursor: pointer; transition: background .15s,padding .15s; }.race-row:hover,.race-row.selected { padding-left: 16px; background: #fff; }.race-number { color: var(--orange); font-size: .75rem; font-weight: 900; }.race-date { font-size: .82rem; font-weight: 800; }.race-name { display: flex; flex-direction: column; }.race-name b { font-size: .95rem; }.race-name small,.race-result small { color: #748078; font-size: .72rem; }.race-result { display: flex; flex-direction: column; align-items: flex-end; }.race-result strong { font-size: 1.1rem; font-variant-numeric: tabular-nums; }.race-arrow { font-size: 1.25rem; }
+.training-panel { padding: 30px; margin-bottom: 18px; }.training-review { display: grid; grid-template-columns: 1.15fr .85fr; gap: 22px; margin-top: 24px; }.review-copy h3 { margin: 0 0 10px; font-size: 1.2rem; letter-spacing: -.02em; }.review-copy p { margin: 0 0 12px; color: #4c5a52; font-size: .92rem; line-height: 1.7; }.review-copy ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }.review-copy li { position: relative; padding-left: 18px; color: #4c5a52; font-size: .84rem; line-height: 1.6; }.review-copy li::before { content: ''; position: absolute; left: 2px; top: .55em; width: 7px; height: 7px; border-radius: 50%; background: var(--orange); }.review-fades { display: grid; gap: 8px; align-content: start; }.fade-row { display: grid; grid-template-columns: 92px 118px 1fr; gap: 10px; align-items: center; padding: 11px 14px; border-radius: 12px; background: #f4f2eb; }.fade-row span { font-size: .78rem; font-weight: 900; }.fade-row strong { font-size: .9rem; font-variant-numeric: tabular-nums; }.fade-row small { color: #6e7972; font-size: .74rem; }.fade-row.warn { background: #fff3d6; }.fade-row.bad { background: #ffe2da; }.fade-row.bad strong { color: #c8401f; }
+.focus-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-top: 24px; }.focus-card { padding: 18px; border: 1px solid #e3e0d7; border-radius: 16px; background: #faf9f4; }.focus-num { color: var(--orange); font-size: .75rem; font-weight: 900; letter-spacing: .14em; }.focus-card h4 { margin: 8px 0; font-size: 1rem; }.focus-card p { margin: 0; color: #5a675f; font-size: .8rem; line-height: 1.65; }
+.tips-list { display: grid; gap: 8px; margin-top: 20px; }.tips-list p { margin: 0; padding: 12px 16px; border-radius: 12px; background: #f0f5e3; color: #42502c; font-size: .84rem; line-height: 1.6; }
+.goal-ladder { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-top: 20px; }.goal-step { padding: 18px 14px; border-radius: 16px; border: 1px dashed #c9c5b8; text-align: center; }.goal-step span { display: block; color: #6e7972; font-size: .74rem; font-weight: 800; }.goal-step strong { display: block; margin-top: 6px; font-size: clamp(1.7rem,2.6vw,2.3rem); letter-spacing: -.05em; }.goal-step small { display: block; margin-top: 2px; color: #7b857f; font-size: .76rem; font-weight: 800; }.goal-step.done { color: #fff; border: 0; background: var(--ink); }.goal-step.done span,.goal-step.done small { color: #b9c4be; }.goal-step.next { color: #fff; border: 0; background: var(--orange); }.goal-step.next span,.goal-step.next small { color: #ffd9cc; }
+.roadmap-panel { padding: 30px; margin-bottom: 18px; }.plan-timeline { margin: 22px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; }.plan-timeline li { display: grid; grid-template-columns: 168px 1fr; gap: 14px; align-items: stretch; }.phase-rail { display: flex; flex-direction: column; justify-content: center; gap: 4px; padding: 14px 16px; border-radius: 14px; background: var(--ink); color: #fff; }.phase-months { color: var(--lime); font-size: .7rem; font-weight: 900; letter-spacing: .12em; }.phase-period { font-size: .88rem; font-weight: 900; }.phase-body { padding: 2px 0; }.phase-body h4 { margin: 0 0 8px; font-size: 1rem; }.phase-body h4 small { display: inline-block; margin: 4px 0 0 10px; padding: 4px 9px; border-radius: 7px; color: #172818; background: var(--lime); font-size: .72rem; font-weight: 900; vertical-align: middle; }.phase-facts { display: flex; flex-wrap: wrap; gap: 8px; }.phase-facts span { padding: 6px 10px; border-radius: 8px; background: #f4f2eb; color: #4c5a52; font-size: .78rem; font-weight: 700; }.phase-body p { margin: 10px 0 0; color: #657169; font-size: .8rem; line-height: 1.6; }
+.calendar-panel { padding: 30px; margin-bottom: 18px; }.cal-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 22px; }.cal-nav { display: flex; align-items: center; gap: 10px; }.cal-nav button { padding: 8px 15px; border: 1px solid #d8d5cc; border-radius: 9px; color: var(--ink); background: #f7f5ef; font-weight: 900; cursor: pointer; }.cal-nav button:disabled { opacity: .3; cursor: default; }.cal-month { min-width: 108px; text-align: center; font-weight: 900; }.cal-summary { display: flex; flex-wrap: wrap; gap: 8px 18px; color: #657169; font-size: .8rem; font-weight: 700; }.cal-summary strong { color: var(--ink); font-size: .92rem; }.cal-race { color: #c8401f; font-weight: 900; }.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; margin-top: 14px; }.cal-dow { padding: 4px 0; color: #7b857f; font-size: .72rem; font-weight: 900; text-align: center; }.cal-cell { min-height: 64px; display: flex; flex-direction: column; gap: 3px; padding: 8px 9px; border: 1px solid #eeece5; border-radius: 12px; background: #fff; }.cal-cell.blank { background: transparent; border-color: transparent; }.cal-day { font-size: .72rem; font-weight: 900; color: #9aa39d; }.cal-cell strong { font-size: .8rem; }.cal-cell small { min-height: 1em; color: #6e7972; font-size: .68rem; font-weight: 800; }.cal-cell.rest { background: #faf9f4; }.cal-cell.strength { background: #f0eee7; border-color: #e4e1d6; }.cal-cell.easy { background: #eef4e4; border-color: #dfeacb; }.cal-cell.easy strong { color: #44631f; }.cal-cell.medium { background: var(--lime); border-color: #b9dc35; }.cal-cell.quality { background: #e4eaff; border-color: #ccd8ff; }.cal-cell.quality strong { color: #2758d6; }.cal-cell.long { background: var(--ink); border-color: var(--ink); }.cal-cell.long .cal-day,.cal-cell.long small { color: #b9c4be; }.cal-cell.long strong { color: #fff; }.cal-cell.race { background: var(--orange); border-color: var(--orange); }.cal-cell.race .cal-day,.cal-cell.race small { color: #ffd9cc; }.cal-cell.race strong { color: #fff; }.cal-cell.check { background: #ffe2da; border-color: #f5c8ba; }.cal-cell.check strong { color: #c8401f; }.cal-cell.today { outline: 2px solid var(--orange); outline-offset: 1px; }.cal-note { margin: 14px 0 0; color: #8a948d; font-size: .74rem; line-height: 1.6; }
 .trail-stat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin: 16px 0 40px; }.trail-stat-grid article { min-height: 160px; padding: 22px; border: 1px solid #dcd9cf; border-radius: 18px; background: #fff; display: flex; flex-direction: column; justify-content: space-between; }.trail-stat-grid span { color: #68756d; font-size: .76rem; font-weight: 900; letter-spacing: .08em; }.trail-stat-grid strong { font-size: clamp(1.9rem,3vw,2.7rem); letter-spacing: -.05em; }.trail-stat-grid strong small { font-size: .9rem; }.trail-stat-grid p { margin: 0; color: #667269; font-size: .78rem; }.trail-stat-grid .trail-progress { color: #fff; border-color: #172818; background: #172818; }.trail-progress span,.trail-progress p { color: #c4d0c5; }.trail-progress strong { color: var(--lime); }
 .trail-legend { display: flex; gap: 18px; color: #5f6d65; font-size: .78rem; font-weight: 800; }.trail-legend span::before { content: ''; display: inline-block; width: 22px; height: 4px; margin-right: 7px; border-radius: 9px; vertical-align: middle; }.trail-legend .actual::before { background: var(--orange); }.trail-legend .effort::before { background: #75a934; }.trail-actual-line,.trail-effort-line { fill: none; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }.trail-actual-line { stroke: var(--orange); }.trail-effort-line { stroke: #75a934; }.trail-actual-dot { fill: #fff; stroke: var(--orange); stroke-width: 4; cursor: pointer; }.trail-effort-dot { fill: #fff; stroke: #75a934; stroke-width: 4; cursor: pointer; }
 .trail-detail-grid { display: grid; grid-template-columns: 1.55fr .75fr; gap: 18px; scroll-margin-top: 84px; }.trail-profile-card,.trail-finish-card { padding: 28px; }.mountain-visual { height: 220px; margin-top: 18px; border-radius: 16px; background: linear-gradient(#e5efdc,#f5f2e9); overflow: hidden; position: relative; }.mountain-visual svg { width: 100%; height: 100%; }.mountain-back { fill: #91ac74; opacity: .72; }.mountain-front { fill: #48683f; }.elevation-number { position: absolute; left: 20px; top: 20px; display: flex; flex-direction: column; color: #173019; }.elevation-number span { font-size: .75rem; font-weight: 900; }.elevation-number strong { font-size: 2rem; }.trail-measures { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-top: 12px; }.trail-measures div { padding: 14px; border-radius: 12px; background: #f4f2eb; }.trail-measures span { display: block; color: #69746d; font-size: .72rem; }.trail-measures strong { font-size: 1.05rem; }.trail-measures small { color: #69746d; }.trail-finish-card { color: #fff; background: #172818; }.trail-category { display: inline-block; padding: 6px 9px; border-radius: 8px; color: #172818; background: var(--lime); font-size: .75rem; font-weight: 900; }.trail-finish-card h2 { margin: 18px 0 5px; font-size: 1.35rem; }.trail-finish-card > p:not(.kicker):not(.rank-empty) { color: #aebcaf; }.finish-time { margin: 32px 0 24px; padding-top: 20px; border-top: 1px solid #3a4b3d; }.finish-time span { display: block; color: #aebcaf; font-size: .75rem; }.finish-time strong { font-size: 2.35rem; letter-spacing: -.04em; }.rank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }.rank-grid div { padding: 12px; border-radius: 10px; color: #172818; background: var(--lime); }.rank-grid span { display: block; font-size: .7rem; }.rank-grid strong { font-size: 1.4rem; }.rank-empty { color: #8d9d90; font-size: .78rem; }.trail-race-row .race-number { color: #628d35; }
-@media (max-width: 850px) { .hero { grid-template-columns: 1fr; padding: 34px; }.bib { min-height: 190px; }.bib strong { font-size: 5rem; }.pb-grid,.trail-stat-grid { grid-template-columns: repeat(2,1fr); }.detail-grid,.trail-detail-grid { grid-template-columns: 1fr; }.trail-measures { grid-template-columns: repeat(2,1fr); }.section-head { flex-direction: column; }.trend-summary { margin-left: 0; }.trend-chart { overflow-x: auto; }.trend-chart svg { min-width: 720px; }.race-row { grid-template-columns: 38px 1fr 100px 20px; }.race-date { display: none; } }
-@media (max-width: 560px) { .marathon-page { padding: 20px 12px 50px; }.discipline-switch { width: 100%; margin: 0 0 14px; }.discipline-switch button { flex: 1; }.hero { padding: 28px 22px; border-radius: 20px; }.hero h1 { font-size: 3.5rem; }.pb-grid,.trail-stat-grid { grid-template-columns: 1fr; }.pb-card,.progress-card,.trail-stat-grid article { min-height: 145px; }.trend-panel,.comparison-panel,.split-panel,.checkpoint-panel,.trail-profile-card,.trail-finish-card { padding: 20px 16px; }.filters { width: 100%; }.filters button { flex: 1; padding-inline: 8px; }.section-head select { width: 100%; max-width: none; }.half-compare { grid-template-columns: 1fr 1fr; }.half-compare p { grid-column: 1/-1; text-align: center; }.trail-measures { grid-template-columns: 1fr 1fr; }.race-row { gap: 9px; }.race-name b { font-size: .82rem; }.race-number { display: none; }.race-row { grid-template-columns: 1fr 90px 18px; }.race-result strong { font-size: .95rem; } }
+@media (max-width: 850px) { .hero { grid-template-columns: 1fr; padding: 34px; }.bib { min-height: 190px; }.bib strong { font-size: 5rem; }.pb-grid,.trail-stat-grid { grid-template-columns: repeat(2,1fr); }.detail-grid,.trail-detail-grid,.training-review { grid-template-columns: 1fr; }.focus-grid,.goal-ladder { grid-template-columns: repeat(2,1fr); }.plan-timeline li { grid-template-columns: 1fr; }.phase-rail { flex-direction: row; align-items: baseline; gap: 10px; }.trail-measures { grid-template-columns: repeat(2,1fr); }.section-head { flex-direction: column; }.trend-summary { margin-left: 0; }.trend-chart { overflow-x: auto; }.trend-chart svg { min-width: 720px; }.race-row { grid-template-columns: 38px 1fr 100px 20px; }.race-date { display: none; } }
+@media (max-width: 560px) { .marathon-page { padding: 20px 12px 50px; }.discipline-switch { width: 100%; margin: 0 0 14px; }.discipline-switch button { flex: 1; }.hero { padding: 28px 22px; border-radius: 20px; }.hero h1 { font-size: 3.5rem; }.pb-grid,.trail-stat-grid { grid-template-columns: 1fr; }.pb-card,.progress-card,.trail-stat-grid article { min-height: 145px; }.trend-panel,.comparison-panel,.split-panel,.checkpoint-panel,.trail-profile-card,.trail-finish-card,.training-panel,.calendar-panel,.roadmap-panel { padding: 20px 16px; }.filters { width: 100%; }.filters button { flex: 1; padding-inline: 8px; }.section-head select { width: 100%; max-width: none; }.half-compare { grid-template-columns: 1fr 1fr; }.half-compare p { grid-column: 1/-1; text-align: center; }.trail-measures { grid-template-columns: 1fr 1fr; }.focus-grid { grid-template-columns: 1fr; }.goal-ladder { grid-template-columns: repeat(2,1fr); }.fade-row { grid-template-columns: 76px 100px 1fr; gap: 6px; }.cal-cell { min-height: 48px; padding: 5px 6px; gap: 2px; }.cal-cell strong { font-size: .68rem; }.cal-grid { gap: 4px; }.cal-summary { gap: 6px 12px; }.race-row { gap: 9px; }.race-name b { font-size: .82rem; }.race-number { display: none; }.race-row { grid-template-columns: 1fr 90px 18px; }.race-result strong { font-size: .95rem; } }
 </style>
