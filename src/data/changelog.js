@@ -3,6 +3,13 @@
 // 渲染层可参考 E:\github\my-index\src\data\changelog.js 与 Changelog.vue。
 export const changelog = [
   {
+    date: '2026-10-26',
+    title: '补充昌平马拉松完赛成绩',
+    changes: [
+      '【比赛成绩】新增 2026北京昌平马拉松（全马）成绩：净计时 04:53:58、枪声成绩 04:55:19，全程分段配速入库，路跑比赛记录增至 12 场。'
+    ]
+  },
+  {
     date: '2026-10-22',
     title: '合成尤格-萨隆，黑暗帝国的统治 122/135',
     changes: [
