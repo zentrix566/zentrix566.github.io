@@ -1,5 +1,5 @@
 // 「黑暗帝国的统治」开卡留档（obtained 回顾区）+ 还没开到的卡（cards 缺失清单）。
-// 全版本 135 张：11 个职业各 10 张 + 中立 25 张；当前已开到 122 张、还差 13 张，
+// 全版本 135 张：11 个职业各 10 张 + 中立 25 张；当前已开到 129 张、还差 6 张，
 // cards 里每划掉一张，总进度就自动 +1（总进度 = (135 − 仍未开到数) / 135）。
 // 卡表经 HearthstoneJSON 校对，卡面图为官方卡牌库渲染图（404×558，2026-10-19 抓取）。
 // - class：classes 里的职业 key；rarity：legendary 传说 / epic 史诗 / rare 稀有 / common 普通
@@ -16,18 +16,25 @@ export const expansion = {
     // 恶魔猎手
     { id: 'BE_565', name: "巢穴女王沙卡尔", class: 'demonhunter', rarity: 'legendary', image: 'BE_565.png', source: 'pack', date: '2026-10-21' },
     { id: 'BE_265', name: "合围", class: 'demonhunter', rarity: 'epic', image: 'BE_265.png', source: 'pack', date: '2026-10-21' },
+    { id: 'BE_771', name: "触须刺鞭", class: 'demonhunter', rarity: 'epic', image: 'BE_771.png', source: 'craft', date: '2026-10-23' },
     // 德鲁伊
     { id: 'BE_852', name: "阿穆纳伊", class: 'druid', rarity: 'legendary', image: 'BE_852.png', source: 'pack', date: '2026-10-21' },
     { id: 'BE_802', name: "死亡绽放", class: 'druid', rarity: 'epic', image: 'BE_802.png', source: 'pack', date: '2026-10-21' },
     { id: 'BE_850t', name: "好奇的恐惧山猫", class: 'druid', rarity: 'epic', image: 'BE_850t.png', source: 'pack', date: '2026-10-21' },
     // 猎人
     { id: 'BE_588', name: "米米尔隆", class: 'hunter', rarity: 'legendary', image: 'BE_588.png', fav: true, source: 'pack', date: '2026-10-21' },
+    { id: 'BE_731', name: "原始石牙兽", class: 'hunter', rarity: 'epic', image: 'BE_731.png', source: 'pack', date: '2026-10-23' },
+    { id: 'BE_555', name: "重新装填", class: 'hunter', rarity: 'epic', image: 'BE_555.png', source: 'craft', date: '2026-10-24' },
+    // 法师
+    { id: 'BE_250', name: "诺甘农的圆盘", class: 'mage', rarity: 'legendary', image: 'BE_250.png', source: 'craft', date: '2026-10-24' },
+    { id: 'BE_270', name: "冰轮法师", class: 'mage', rarity: 'epic', image: 'BE_270.png', source: 'craft', date: '2026-10-24' },
     // 圣骑士
     { id: 'BE_143', name: "阿米图特，阿米图斯的守护者", class: 'paladin', rarity: 'legendary', image: 'BE_143.png', source: 'pack', date: '2026-10-21' },
     { id: 'BE_146', name: "誓缚光环", class: 'paladin', rarity: 'epic', image: 'BE_146.png', source: 'pack', date: '2026-10-21' },
     // 牧师
     { id: 'BE_227', name: "黑暗帝国之刃", class: 'priest', rarity: 'legendary', image: 'BE_227.png', source: 'pack', date: '2026-10-21' },
     // 潜行者
+    { id: 'BE_725', name: "不可知者", class: 'rogue', rarity: 'legendary', image: 'BE_725.png', source: 'pack', date: '2026-10-23' },
     { id: 'BE_702', name: "暗影匠师", class: 'rogue', rarity: 'epic', image: 'BE_702.png', source: 'pack', date: '2026-10-21' },
     // 萨满
     { id: 'BE_209', name: "耐普图隆，潮汐之王", class: 'shaman', rarity: 'legendary', image: 'BE_209.png', source: 'pack', date: '2026-10-21' },
@@ -36,6 +43,7 @@ export const expansion = {
     { id: 'BE_005', name: "充盈仪式", class: 'warlock', rarity: 'epic', image: 'BE_005.png', source: 'pack', date: '2026-10-21' },
     // 战士
     { id: 'BE_055', name: "阿扎达斯", class: 'warrior', rarity: 'legendary', image: 'BE_055.png', source: 'pack', date: '2026-10-21' },
+    { id: 'BE_557', name: "塞特斯", class: 'warrior', rarity: 'legendary', image: 'BE_557.png', fav: true, source: 'craft', date: '2026-10-23' },
     { id: 'BE_600', name: "钢铁活化者", class: 'warrior', rarity: 'epic', image: 'BE_600.png', source: 'pack', date: '2026-10-21' },
     // 中立
     { id: 'BE_784', name: "亚煞极，泰坦杀神", class: 'neutral', rarity: 'legendary', image: 'BE_784.png', fav: true, source: 'pack', date: '2026-10-21' },
@@ -47,23 +55,14 @@ export const expansion = {
   cards: [
     // 恶魔猎手
     { id: 'BE_230', name: "拉维兹", class: 'demonhunter', rarity: 'legendary', image: 'BE_230.png' },
-    { id: 'BE_771', name: "触须刺鞭", class: 'demonhunter', rarity: 'epic', image: 'BE_771.png' },
     // 猎人
     { id: 'BE_732', name: "穿刺者克洛恩", class: 'hunter', rarity: 'legendary', image: 'BE_732.png' },
-    { id: 'BE_731', name: "原始石牙兽", class: 'hunter', rarity: 'epic', image: 'BE_731.png' },
-    { id: 'BE_555', name: "重新装填", class: 'hunter', rarity: 'epic', image: 'BE_555.png' },
     // 法师
-    { id: 'BE_250', name: "诺甘农的圆盘", class: 'mage', rarity: 'legendary', image: 'BE_250.png' },
     { id: 'BE_259', name: "伊希斯特", class: 'mage', rarity: 'legendary', image: 'BE_259.png' },
-    { id: 'BE_270', name: "冰轮法师", class: 'mage', rarity: 'epic', image: 'BE_270.png' },
     // 牧师
     { id: 'BE_790', name: "泽奥图", class: 'priest', rarity: 'legendary', image: 'BE_790.png' },
-    // 潜行者
-    { id: 'BE_725', name: "不可知者", class: 'rogue', rarity: 'legendary', image: 'BE_725.png' },
     // 萨满
     { id: 'BE_337', name: "地母塞拉赞恩", class: 'shaman', rarity: 'legendary', image: 'BE_337.png' },
-    // 战士
-    { id: 'BE_557', name: "塞特斯", class: 'warrior', rarity: 'legendary', image: 'BE_557.png', fav: true },
     // 中立
     { id: 'BE_327', name: "秘典翻译官", class: 'neutral', rarity: 'epic', image: 'BE_327.png' }
   ]
