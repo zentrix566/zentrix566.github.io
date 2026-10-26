@@ -1,5 +1,5 @@
 // 「黑暗帝国的统治」开卡留档（obtained 回顾区）+ 还没开到的卡（cards 缺失清单）。
-// 全版本 135 张：11 个职业各 10 张 + 中立 25 张；当前已开到 129 张、还差 6 张，
+// 全版本 135 张：11 个职业各 10 张 + 中立 25 张；当前已开到 130 张、还差 5 张，
 // cards 里每划掉一张，总进度就自动 +1（总进度 = (135 − 仍未开到数) / 135）。
 // 卡表经 HearthstoneJSON 校对，卡面图为官方卡牌库渲染图（404×558，2026-10-19 抓取）。
 // - class：classes 里的职业 key；rarity：legendary 传说 / epic 史诗 / rare 稀有 / common 普通
@@ -50,6 +50,7 @@ export const expansion = {
     { id: 'BE_017', name: "恩佐斯，梦境之末", class: 'neutral', rarity: 'legendary', image: 'BE_017.png', fav: true, source: 'pack', date: '2026-10-21' },
     { id: 'BE_008', name: "魔古将领", class: 'neutral', rarity: 'epic', image: 'BE_008.png', source: 'pack', date: '2026-10-21' },
     { id: 'BE_994', name: "石头穴居人", class: 'neutral', rarity: 'epic', image: 'BE_994.png', source: 'pack', date: '2026-10-21' },
+    { id: 'BE_327', name: "秘典翻译官", class: 'neutral', rarity: 'epic', image: 'BE_327.png', source: 'pack', date: '2026-10-25' },
     { id: 'BE_009', name: "古神主谋尤格-萨隆", class: 'neutral', rarity: 'legendary', image: 'BE_009.png', fav: true, source: 'craft', date: '2026-10-22' }
   ],
   cards: [
@@ -62,9 +63,7 @@ export const expansion = {
     // 牧师
     { id: 'BE_790', name: "泽奥图", class: 'priest', rarity: 'legendary', image: 'BE_790.png' },
     // 萨满
-    { id: 'BE_337', name: "地母塞拉赞恩", class: 'shaman', rarity: 'legendary', image: 'BE_337.png' },
-    // 中立
-    { id: 'BE_327', name: "秘典翻译官", class: 'neutral', rarity: 'epic', image: 'BE_327.png' }
+    { id: 'BE_337', name: "地母塞拉赞恩", class: 'shaman', rarity: 'legendary', image: 'BE_337.png' }
   ]
 }
 
