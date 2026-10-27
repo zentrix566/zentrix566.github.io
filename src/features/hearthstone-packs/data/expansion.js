@@ -1,12 +1,12 @@
 // 「黑暗帝国的统治」开卡留档（obtained 回顾区）+ 还没开到的卡（cards 缺失清单）。
-// 全版本 135 张：11 个职业各 10 张 + 中立 25 张；当前已开到 130 张、还差 5 张，
+// 全版本 135 张：11 个职业各 10 张 + 中立 25 张；当前已开到 132 张、还差 3 张，
 // cards 里每划掉一张，总进度就自动 +1（总进度 = (135 − 仍未开到数) / 135）。
 // 卡表经 HearthstoneJSON 校对，卡面图为官方卡牌库渲染图（404×558，2026-10-19 抓取）。
 // - class：classes 里的职业 key；rarity：legendary 传说 / epic 史诗 / rare 稀有 / common 普通
 // - image：assets/ 目录下的文件名（文件名 = 官方卡牌 id）
 // - fav: true 表示重点关注的卡，缺失清单顶部「⭐ 重点关注」前排展示
 // 开卡留档流程：哪张开到了，把它的条目从下面 cards 挪到 obtained，并补 source（pack 开包 /
-// craft 合成 / event 活动）和 date（YYYY-MM-DD），image 保留不动，页面「已开到的卡」回顾区即显示。
+// craft 合成 / event 活动 / reward 路线奖励）和 date（YYYY-MM-DD），image 保留不动，页面「已开到的卡」回顾区即显示。
 export const expansion = {
   name: '黑暗帝国的统治',
   total: 135,
@@ -17,6 +17,7 @@ export const expansion = {
     { id: 'BE_565', name: "巢穴女王沙卡尔", class: 'demonhunter', rarity: 'legendary', image: 'BE_565.png', source: 'pack', date: '2026-10-21' },
     { id: 'BE_265', name: "合围", class: 'demonhunter', rarity: 'epic', image: 'BE_265.png', source: 'pack', date: '2026-10-21' },
     { id: 'BE_771', name: "触须刺鞭", class: 'demonhunter', rarity: 'epic', image: 'BE_771.png', source: 'craft', date: '2026-10-23' },
+    { id: 'BE_230', name: "拉维兹", class: 'demonhunter', rarity: 'legendary', image: 'BE_230.png', source: 'pack', date: '2026-10-28' },
     // 德鲁伊
     { id: 'BE_852', name: "阿穆纳伊", class: 'druid', rarity: 'legendary', image: 'BE_852.png', source: 'pack', date: '2026-10-21' },
     { id: 'BE_802', name: "死亡绽放", class: 'druid', rarity: 'epic', image: 'BE_802.png', source: 'pack', date: '2026-10-21' },
@@ -25,6 +26,7 @@ export const expansion = {
     { id: 'BE_588', name: "米米尔隆", class: 'hunter', rarity: 'legendary', image: 'BE_588.png', fav: true, source: 'pack', date: '2026-10-21' },
     { id: 'BE_731', name: "原始石牙兽", class: 'hunter', rarity: 'epic', image: 'BE_731.png', source: 'pack', date: '2026-10-23' },
     { id: 'BE_555', name: "重新装填", class: 'hunter', rarity: 'epic', image: 'BE_555.png', source: 'craft', date: '2026-10-24' },
+    { id: 'BE_732', name: "穿刺者克洛恩", class: 'hunter', rarity: 'legendary', image: 'BE_732.png', source: 'reward', date: '2026-10-28' },
     // 法师
     { id: 'BE_250', name: "诺甘农的圆盘", class: 'mage', rarity: 'legendary', image: 'BE_250.png', source: 'craft', date: '2026-10-24' },
     { id: 'BE_270', name: "冰轮法师", class: 'mage', rarity: 'epic', image: 'BE_270.png', source: 'craft', date: '2026-10-24' },
@@ -54,10 +56,6 @@ export const expansion = {
     { id: 'BE_009', name: "古神主谋尤格-萨隆", class: 'neutral', rarity: 'legendary', image: 'BE_009.png', fav: true, source: 'craft', date: '2026-10-22' }
   ],
   cards: [
-    // 恶魔猎手
-    { id: 'BE_230', name: "拉维兹", class: 'demonhunter', rarity: 'legendary', image: 'BE_230.png' },
-    // 猎人
-    { id: 'BE_732', name: "穿刺者克洛恩", class: 'hunter', rarity: 'legendary', image: 'BE_732.png' },
     // 法师
     { id: 'BE_259', name: "伊希斯特", class: 'mage', rarity: 'legendary', image: 'BE_259.png' },
     // 牧师

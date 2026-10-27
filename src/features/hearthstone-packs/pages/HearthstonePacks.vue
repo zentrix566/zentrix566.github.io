@@ -126,10 +126,11 @@
         </template>
         <template v-else-if="editingInMissing">
           <label class="date-row">开到日期 <input v-model="editDate" type="date"></label>
-          <div class="editor-actions" :class="isTempGot(editing) ? 'four' : 'three'">
+          <div class="editor-actions" :class="isTempGot(editing) ? 'five' : 'four'">
             <button class="btn act-pack" type="button" @click="mark('pack')">📦 开包</button>
             <button class="btn act-craft" type="button" @click="mark('craft')">🔨 合成</button>
             <button class="btn act-event" type="button" @click="mark('event')">🎁 活动</button>
+            <button class="btn act-reward" type="button" @click="mark('reward')">🏆 路线奖励</button>
             <button v-if="isTempGot(editing)" class="btn act-clear" type="button" @click="unmark">↩ 还没开到</button>
           </div>
           <p class="editor-hint">标记先存本机浏览器；想长期留档进回顾区，把卡名和来源告诉我挪进数据文件即可。</p>
@@ -197,7 +198,7 @@ const missingPool = computed(() => [
     .map((record) => ({ ...record, revived: true }))
 ])
 const isTempGot = (card) => !card.revived && Boolean(owned.value[card.id])
-const SOURCE_LABELS = { pack: '开包', craft: '合成', event: '活动' }
+const SOURCE_LABELS = { pack: '开包', craft: '合成', event: '活动', reward: '路线奖励' }
 // 缺失卡读 localStorage 标记，留档记录读自身字段
 const sourceLabel = (card) => SOURCE_LABELS[owned.value[card.id]?.source ?? card.source] || '开包'
 const gotDate = (card) => owned.value[card.id]?.date ?? card.date
@@ -379,11 +380,14 @@ function restoreOne(card) {
 .date-row input { flex: 1; padding: 7px 10px; border: 1px solid rgba(255, 255, 255, .16); border-radius: 8px; background: rgba(255, 255, 255, .05); color: #f5f1e8; font: inherit; color-scheme: dark; }
 .editor-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .editor-actions.four { grid-template-columns: repeat(2, 1fr); }
+.editor-actions.five { grid-template-columns: repeat(2, 1fr); }
+.editor-actions.five .act-clear { grid-column: 1 / -1; }
 .editor-actions .btn { padding: 9px 6px; border: 1px solid rgba(255, 255, 255, .16); border-radius: 9px; background: rgba(255, 255, 255, .05); color: #e7e2ee; font-size: .85rem; font-weight: 700; cursor: pointer; }
 .editor-actions .btn:hover { border-color: #efc96f; }
 .act-pack:hover { background: rgba(237, 201, 111, .18); }
 .act-craft:hover { background: rgba(163, 53, 238, .22); }
 .act-event:hover { background: rgba(103, 178, 106, .2); }
+.act-reward:hover { background: rgba(255, 138, 76, .18); }
 .act-clear:hover { background: rgba(255, 255, 255, .1); }
 .editor-hint { margin: 12px 0 0; color: #8f8a9d; font-size: .78rem; }
 .record-line { margin: 4px 0 10px; color: #9fd3a3; font-size: 1.05rem; font-weight: 700; }
@@ -411,6 +415,6 @@ function restoreOne(card) {
   .mode-switch { flex-basis: 100%; justify-content: center; }
   .cards-panel { padding: 15px; }
   .cards-grid { grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); gap: 10px; }
-  .editor-actions, .editor-actions.four { grid-template-columns: 1fr; }
+  .editor-actions, .editor-actions.four, .editor-actions.five { grid-template-columns: 1fr; }
 }
 </style>
