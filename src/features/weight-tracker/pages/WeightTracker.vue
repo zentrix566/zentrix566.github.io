@@ -270,7 +270,7 @@
 import { computed, ref } from 'vue'
 import { HEIGHT_CM, weightRecords } from '../data/weightData.js'
 
-const formatJin = (v) => (Number.isInteger(v) ? String(v) : v.toFixed(1))
+const formatJin = (v) => v.toFixed(1)
 const labelOf = (r) => `${r.year}年${r.month}月`
 const signed = (v) => `${v > 0 ? '+' : ''}${v.toFixed(1)}`
 
