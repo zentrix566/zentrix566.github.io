@@ -1,6 +1,6 @@
-// 每日训练日历生成器：把 trainingNotes 的五阶段路线图展开成逐日课表。
+// 每日训练日历生成器：把 trainingNotes 的三阶段路线图展开成逐日课表。
 // 周模板：周一力量 · 周二质量课 · 周三轻松 · 周四中距离 · 周五休息 · 周六轻松 · 周日长距离，每第 4 周减量，赛前自动 taper。
-// 比赛日期按往年惯例预估（石家庄 3 月末周日、秋赛 10 月下旬、半马检验 8 月末），官宣后改 races 数组即可，课表自动重排。
+// 比赛日期按往年惯例预估（春季赛 4 月下旬周日），官宣后改 races 数组即可，课表自动重排。
 import { trainingNotes } from './trainingNotes.js'
 
 export const planMeta = trainingNotes.plan
@@ -11,30 +11,25 @@ const isoOf = (ms) => new Date(ms).toISOString().slice(0, 10)
 const even = (n) => Math.round(n / 2) * 2
 
 export const races = [
-  { date: '2027-03-28', name: '石家庄马拉松 · 目标 4:30（6′25″/km）', kind: 'race' },
-  { date: '2027-08-29', name: '半马检验 · 目标 2:05 内', kind: 'check' },
-  { date: '2027-10-24', name: '秋季赛（烟台 / 唐山 / 昌平）· 目标 4:15 内（6′03″/km）', kind: 'race' },
-  { date: '2028-03-26', name: '春季赛（石家庄 / 副中心）· 目标 4:10 内（5′55″/km）', kind: 'race' }
+  { date: '2027-04-25', name: '春季赛（北京城市副中心 / 京津冀）· 目标 4:30 内（6′25″/km）', kind: 'race' }
 ]
 const raceByDate = Object.fromEntries(races.map((race) => [race.date, race]))
 
-export const planStart = '2026-10-26'
-export const planEnd = '2028-03-31'
+export const planStart = '2026-11-02'
+export const planEnd = '2027-04-30'
 export const planRange = [planStart.slice(0, 7), planEnd.slice(0, 7)]
 const START = utcMs(planStart)
 const END = utcMs(planEnd)
-const RACE_POST = utcMs('2028-03-26')
+const RACE_POST = utcMs('2027-04-25')
 
 const weekOf = (iso) => Math.floor((utcMs(iso) - START) / (7 * MS))
 
-// 阶段按「自 2026-10-26 起的周序号」划分：0 恢复周，1–13 基础重建，14–21 春季专项，22–43 夏练底盘，44–51 秋季赛，52–73 4:10 专项。
+// 阶段按「自 2026-11-02 起的周序号」划分：0–8 基础重建，9–16 有氧强化，17–24 4:30 专项（含 taper 2 周）。
 // long: 长距离 [起点, 峰值]；weekly: 周跑量 [起, 止]；mpShare: 长距离末段带比赛配速的占比；taper: 赛前减量周数。
 const phases = [
-  { from: 1, to: weekOf('2027-03-28') - 8, long: [14, 24], weekly: [35, 50], tempo: 'strides' },
-  { from: weekOf('2027-03-28') - 7, to: weekOf('2027-03-28'), long: [24, 30], weekly: [55, 60], tempo: 'tempo', mpPace: '6:25', mpShare: 0.35, taper: 2 },
-  { from: weekOf('2027-03-28') + 1, to: weekOf('2027-08-29'), long: [24, 28], weekly: [55, 60], tempo: 'hills', check: '2027-08-29', taper: 1 },
-  { from: weekOf('2027-08-29') + 1, to: weekOf('2027-10-24'), long: [26, 32], weekly: [50, 55], tempo: 'interval', mpPace: '6:05', mpShare: 0.5, taper: 2 },
-  { from: weekOf('2027-10-24') + 1, to: weekOf('2028-03-26'), long: [26, 30], weekly: [55, 60], tempo: 'mp', mpPace: '5:55', mpShare: 0.55, taper: 3 }
+  { from: 0, to: 8, long: [14, 22], weekly: [30, 45], tempo: 'strides' },
+  { from: 9, to: 16, long: [22, 26], weekly: [45, 55], tempo: 'tempo' },
+  { from: 17, to: weekOf('2027-04-25'), long: [26, 30], weekly: [55, 60], tempo: 'mp', mpPace: '6:25', intPace: '6:00', mpShare: 0.5, taper: 2 }
 ]
 
 // 周二质量课内容（按阶段），weeksOut >= 0 表示处于 taper（0 = 比赛周）
@@ -45,8 +40,8 @@ function qualityOf(phase, longWk, i, weeksOut) {
   if (phase.tempo === 'tempo') { const t = Math.min(8, 5 + i); return { type: 'quality', label: '节奏', dist: 3 + t, note: `节奏跑 ${t}km @ 6:00–6:10（含 2km 热身 1km 放松）` } }
   if (phase.tempo === 'hills') { const d = Math.min(10, even(0.3 * longWk) + 2); return { type: 'quality', label: '坡道', dist: d, note: `有氧 ${d}km + 坡道重复跑 8×45″（下坡慢回）` } }
   if (phase.tempo === 'interval') return { type: 'quality', label: '间歇', dist: 10, note: '间歇 5×1000m @ 5:35–5:45（含 2km 热身 2km 放松）' }
-  if (i % 2 === 0) return { type: 'quality', label: 'MP', dist: 19, note: '马拉松配速 2×8km @ 5:55（含 2km 热身 1km 放松）' }
-  return { type: 'quality', label: '间歇', dist: 12, note: '间歇 4×1600m @ 5:40（含 3km 热身 2km 放松）' }
+  if (i % 2 === 0) return { type: 'quality', label: 'MP', dist: 19, note: `马拉松配速 2×8km @ ${phase.mpPace}（含 2km 热身 1km 放松）` }
+  return { type: 'quality', label: '间歇', dist: 12, note: `间歇 4×1600m @ ${phase.intPace}（含 3km 热身 2km 放松）` }
 }
 
 // 周日长距离：常规周线性递进 + 每 4 周减量；taper 周按比例缩
@@ -68,19 +63,6 @@ function dayEntry(ms) {
   if (ms > RACE_POST) return { date, type: 'rest', label: '休整', dist: 0, note: '赛后休整周：散步、拉伸、多睡' }
   const week = Math.floor((ms - START) / (7 * MS))
   const dow = new Date(ms).getUTCDay()
-  if (week === 0) {
-    const map = {
-      1: ['rest', '休息', 0, '昌平赛后第一天，彻底休息'],
-      2: ['easy', '轻松', 5, '恢复慢跑 5km，全程能聊天的配速'],
-      3: ['strength', '力量', 0, '轻量力量 30′：弓步 / 深蹲 / 提踵'],
-      4: ['easy', '轻松', 5, '恢复慢跑 5km'],
-      5: ['rest', '休息', 0, '休息'],
-      6: ['easy', '慢跑', 4, '慢跑 4km，怎么舒服怎么来'],
-      0: ['easy', '轻松', 8, '轻松 8km，恢复周收尾，下周起量']
-    }
-    const [type, label, dist, note] = map[dow]
-    return { date, type, label, dist, note }
-  }
   const phase = phases.find((p) => week >= p.from && week <= p.to)
   if (!phase) return { date, type: 'rest', label: '休整', dist: 0, note: '阶段间隙，休整' }
   const i = week - phase.from

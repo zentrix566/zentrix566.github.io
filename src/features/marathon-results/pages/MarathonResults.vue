@@ -96,7 +96,7 @@
             </template>
           </div>
         </div>
-        <p class="cal-note">🏁 比赛日为按往年惯例的预估日期（石家庄 3 月末周日、半马检验 8 月末、秋赛 10 月下旬），官宣后更新 dailyPlan.js 的 races 即自动重排；距离为四舍五入的参考值，按当时体感微调。</p>
+        <p class="cal-note">🏁 比赛日为按往年惯例的预估日期（春季赛 4 月下旬周日），官宣后更新 dailyPlan.js 的 races 即自动重排；距离为四舍五入的参考值，按当时体感微调。</p>
       </section>
 
       <section class="panel roadmap-panel">
@@ -307,7 +307,7 @@ const trailRaceLog = [...trailResults].sort((a, b) => b.date.localeCompare(a.dat
 const roadBreakdown = ['全马', '半马', '10公里'].map((cat) => `${raceResults.filter((race) => race.category === cat).length} ${cat === '10公里' ? '场 10K' : cat}`).join(' · ')
 const notes = trainingNotes
 const todayIso = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10)
-const calMonth = ref('2026-10')
+const calMonth = ref('2026-11')
 const calData = computed(() => monthCells(calMonth.value))
 const shiftMonth = (delta) => {
   const [y, m] = calMonth.value.split('-').map(Number)
