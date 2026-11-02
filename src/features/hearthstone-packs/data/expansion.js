@@ -1,5 +1,5 @@
 // 「黑暗帝国的统治」开卡留档（obtained 回顾区）+ 还没开到的卡（cards 缺失清单）。
-// 全版本 135 张：11 个职业各 10 张 + 中立 25 张；当前已开到 132 张、还差 3 张，
+// 全版本 135 张：11 个职业各 10 张 + 中立 25 张；当前已开到 133 张、还差 2 张，
 // cards 里每划掉一张，总进度就自动 +1（总进度 = (135 − 仍未开到数) / 135）。
 // 卡表经 HearthstoneJSON 校对，卡面图为官方卡牌库渲染图（404×558，2026-10-19 抓取）。
 // - class：classes 里的职业 key；rarity：legendary 传说 / epic 史诗 / rare 稀有 / common 普通
@@ -30,6 +30,7 @@ export const expansion = {
     // 法师
     { id: 'BE_250', name: "诺甘农的圆盘", class: 'mage', rarity: 'legendary', image: 'BE_250.png', source: 'craft', date: '2026-10-24' },
     { id: 'BE_270', name: "冰轮法师", class: 'mage', rarity: 'epic', image: 'BE_270.png', source: 'craft', date: '2026-10-24' },
+    { id: 'BE_259', name: "伊希斯特", class: 'mage', rarity: 'legendary', image: 'BE_259.png', source: 'pack', date: '2026-11-01' },
     // 圣骑士
     { id: 'BE_143', name: "阿米图特，阿米图斯的守护者", class: 'paladin', rarity: 'legendary', image: 'BE_143.png', source: 'pack', date: '2026-10-21' },
     { id: 'BE_146', name: "誓缚光环", class: 'paladin', rarity: 'epic', image: 'BE_146.png', source: 'pack', date: '2026-10-21' },
@@ -56,8 +57,6 @@ export const expansion = {
     { id: 'BE_009', name: "古神主谋尤格-萨隆", class: 'neutral', rarity: 'legendary', image: 'BE_009.png', fav: true, source: 'craft', date: '2026-10-22' }
   ],
   cards: [
-    // 法师
-    { id: 'BE_259', name: "伊希斯特", class: 'mage', rarity: 'legendary', image: 'BE_259.png' },
     // 牧师
     { id: 'BE_790', name: "泽奥图", class: 'priest', rarity: 'legendary', image: 'BE_790.png' },
     // 萨满
