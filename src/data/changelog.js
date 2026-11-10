@@ -3,6 +3,13 @@
 // 渲染层可参考 E:\github\my-index\src\data\changelog.js 与 Changelog.vue。
 export const changelog = [
   {
+    date: '2026-11-10',
+    title: '更新 11 月狂野上传说记录',
+    changes: [
+      '【炉石上传说】补充 2026 年 11 月狂野上传说记录：40暗牧（牧师）。'
+    ]
+  },
+  {
     date: '2026-11-01',
     title: '开包开出伊希斯特，黑暗帝国的统治 133/135',
     changes: [
