@@ -1,5 +1,5 @@
 // 「黑暗帝国的统治」开卡留档（obtained 回顾区）+ 还没开到的卡（cards 缺失清单）。
-// 全版本 135 张：11 个职业各 10 张 + 中立 25 张；当前已开到 133 张、还差 2 张，
+// 全版本 135 张：11 个职业各 10 张 + 中立 25 张；当前已开到 134 张、还差 1 张，
 // cards 里每划掉一张，总进度就自动 +1（总进度 = (135 − 仍未开到数) / 135）。
 // 卡表经 HearthstoneJSON 校对，卡面图为官方卡牌库渲染图（404×558，2026-10-19 抓取）。
 // - class：classes 里的职业 key；rarity：legendary 传说 / epic 史诗 / rare 稀有 / common 普通
@@ -42,6 +42,7 @@ export const expansion = {
     // 萨满
     { id: 'BE_209', name: "耐普图隆，潮汐之王", class: 'shaman', rarity: 'legendary', image: 'BE_209.png', source: 'pack', date: '2026-10-21' },
     { id: 'BE_171', name: "威能恐魔", class: 'shaman', rarity: 'epic', image: 'BE_171.png', source: 'pack', date: '2026-10-21' },
+    { id: 'BE_337', name: "地母塞拉赞恩", class: 'shaman', rarity: 'legendary', image: 'BE_337.png', source: 'pack', date: '2026-11-25' },
     // 术士
     { id: 'BE_005', name: "充盈仪式", class: 'warlock', rarity: 'epic', image: 'BE_005.png', source: 'pack', date: '2026-10-21' },
     // 战士
@@ -58,9 +59,7 @@ export const expansion = {
   ],
   cards: [
     // 牧师
-    { id: 'BE_790', name: "泽奥图", class: 'priest', rarity: 'legendary', image: 'BE_790.png' },
-    // 萨满
-    { id: 'BE_337', name: "地母塞拉赞恩", class: 'shaman', rarity: 'legendary', image: 'BE_337.png' }
+    { id: 'BE_790', name: "泽奥图", class: 'priest', rarity: 'legendary', image: 'BE_790.png' }
   ]
 }
 

@@ -3,6 +3,13 @@
 // 渲染层可参考 E:\github\my-index\src\data\changelog.js 与 Changelog.vue。
 export const changelog = [
   {
+    date: '2026-11-25',
+    title: '开包开出地母塞拉赞恩，黑暗帝国的统治 134/135',
+    changes: [
+      '【炉石开包】11 月 25 日开包开出「地母塞拉赞恩」（萨满传说），萨满集齐；总进度 133/135 → 134/135，只差最后 1 张——牧师「泽奥图」（合成需 1,600 尘）。'
+    ]
+  },
+  {
     date: '2026-11-12',
     title: '新增上班鼓励器',
     changes: [
